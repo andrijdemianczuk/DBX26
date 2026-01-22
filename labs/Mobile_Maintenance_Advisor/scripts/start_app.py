@@ -42,6 +42,42 @@ class ProcessManager:
         self.frontend_log = None
         self.port = port
 
+    def start_process(self, cmd, name, log_file, ready_patterns, cwd=None):
+        """Start a subprocess and begin monitoring its stdout for readiness."""
+        print(f"Starting {name}: {' '.join(cmd)}")
+        proc = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1,
+            cwd=cwd,
+            env=os.environ.copy(),
+        )
+        t = threading.Thread(
+            target=self.monitor_process,
+            args=(proc, name, log_file, ready_patterns),
+            daemon=True,
+        )
+        t.start()
+        return proc
+
+    def print_logs(self, filepath, max_lines=200):
+        """Best-effort log dump for troubleshooting in the Apps UI."""
+        try:
+            if not Path(filepath).exists():
+                return
+            with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                lines = f.readlines()
+            tail = lines[-max_lines:] if len(lines) > max_lines else lines
+            print("\n" + "-" * 42)
+            print(f"Last {len(tail)} lines of {filepath}:")
+            print("-" * 42)
+            for l in tail:
+                print(l.rstrip())
+        except Exception as e:
+            print(f"Could not read {filepath}: {e}")
+
     def monitor_process(self, process, name, log_file, patterns):
         is_ready = False
         try:
@@ -77,61 +113,23 @@ class ProcessManager:
             self.failed.set()
 
     def clone_frontend_if_needed(self):
-        if Path("e2e-chatbot-app-next").exists():
+        """Legacy hook.
+
+        The original template clones `e2e-chatbot-app-next` at runtime.
+
+        This project instead vendors a local frontend in `chat-ui/` so:
+        - you can customize it freely
+        - builds are reproducible
+        - the app can run without git access
+
+        This function keeps the old name to avoid changing other logic.
+        """
+        if Path("chat-ui").exists():
             return True
 
-        print("Cloning e2e-chatbot-app-next...")
-        for url in [
-            "https://github.com/databricks/app-templates.git",
-            "git@github.com:databricks/app-templates.git",
-        ]:
-            try:
-                subprocess.run(
-                    ["git", "clone", "--filter=blob:none", "--sparse", url, "temp-app-templates"],
-                    check=True,
-                    capture_output=True,
-                )
-                break
-            except subprocess.CalledProcessError:
-                continue
-        else:
-            print("ERROR: Failed to clone repository.")
-            print(
-                "Manually download from: https://download-directory.github.io/?url=https://github.com/databricks/app-templates/tree/main/e2e-chatbot-app-next"
-            )
-            return False
-
-        subprocess.run(
-            ["git", "sparse-checkout", "set", "e2e-chatbot-app-next"],
-            cwd="temp-app-templates",
-            check=True,
-        )
-        Path("temp-app-templates/e2e-chatbot-app-next").rename("e2e-chatbot-app-next")
-        shutil.rmtree("temp-app-templates", ignore_errors=True)
-        return True
-
-    def start_process(self, cmd, name, log_file, patterns, cwd=None):
-        print(f"Starting {name}...")
-        process = subprocess.Popen(
-            cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1, cwd=cwd
-        )
-
-        thread = threading.Thread(
-            target=self.monitor_process, args=(process, name, log_file, patterns), daemon=True
-        )
-        thread.start()
-        return process
-
-    def print_logs(self, log_path):
-        print(f"\nLast 50 lines of {log_path}:")
-        print("-" * 40)
-        try:
-            lines = Path(log_path).read_text().splitlines()
-            print("\n".join(lines[-50:]))
-        except FileNotFoundError:
-            print(f"(no {log_path} found)")
-        print("-" * 40)
-
+        print("ERROR: Missing ./chat-ui frontend folder.")
+        print("Expected a local frontend at: chat-ui/")
+        return False
     def cleanup(self):
         print("\n" + "=" * 42)
         print("Shutting down both processes...")
@@ -175,7 +173,7 @@ class ProcessManager:
             )
 
             # Setup and start frontend
-            frontend_dir = Path("e2e-chatbot-app-next")
+            frontend_dir = Path("chat-ui")
             for cmd, desc in [("npm install", "install"), ("npm run build", "build")]:
                 print(f"Running npm {desc}...")
                 result = subprocess.run(
