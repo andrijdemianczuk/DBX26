@@ -1,20 +1,11 @@
 import logging
-from typing import Any, AsyncGenerator, AsyncIterator, Optional
+from typing import AsyncGenerator, AsyncIterator, Optional
+from uuid import uuid4
 
+from agents.result import StreamEvent
 from databricks.sdk import WorkspaceClient
-from databricks_langchain.chat_models import json
-from langchain.messages import AIMessageChunk, ToolMessage
 from mlflow.genai.agent_server import get_request_headers
-from mlflow.types.responses import (
-    ResponsesAgentStreamEvent,
-    create_text_delta,
-    output_to_responses_items_stream,
-)
-
-
-def get_user_workspace_client() -> WorkspaceClient:
-    token = get_request_headers().get("x-forwarded-access-token")
-    return WorkspaceClient(token=token, auth_type="pat")
+from mlflow.types.responses import ResponsesAgentStreamEvent
 
 
 def get_databricks_host_from_env() -> Optional[str]:
@@ -26,30 +17,28 @@ def get_databricks_host_from_env() -> Optional[str]:
         return None
 
 
-async def process_agent_astream_events(
-    async_stream: AsyncIterator[Any],
-) -> AsyncGenerator[ResponsesAgentStreamEvent, None]:
-    """
-    Generic helper to process agent stream events and yield ResponsesAgentStreamEvent objects.
+def get_user_workspace_client() -> WorkspaceClient:
+    token = get_request_headers().get("x-forwarded-access-token")
+    return WorkspaceClient(token=token, auth_type="pat")
 
-    Args:
-        async_stream: The async iterator from agent.astream()
-    """
+
+async def process_agent_stream_events(
+    async_stream: AsyncIterator[StreamEvent],
+) -> AsyncGenerator[ResponsesAgentStreamEvent, None]:
+    curr_item_id = str(uuid4())
     async for event in async_stream:
-        if event[0] == "updates":
-            for node_data in event[1].values():
-                if len(node_data.get("messages", [])) > 0:
-                    for msg in node_data["messages"]:
-                        if isinstance(msg, ToolMessage) and not isinstance(msg.content, str):
-                            msg.content = json.dumps(msg.content)
-                    for item in output_to_responses_items_stream(node_data["messages"]):
-                        yield item
-        elif event[0] == "messages":
-            try:
-                chunk = event[1][0]
-                if isinstance(chunk, AIMessageChunk) and (content := chunk.content):
-                    yield ResponsesAgentStreamEvent(
-                        **create_text_delta(delta=content, item_id=chunk.id)
-                    )
-            except Exception as e:
-                logging.exception(f"Error processing agent stream event: {e}")
+        if event.type == "raw_response_event":
+            event_data = event.data.model_dump()
+            if event_data["type"] == "response.output_item.added":
+                curr_item_id = str(uuid4())
+                event_data["item"]["id"] = curr_item_id
+            elif event_data.get("item") is not None and event_data["item"].get("id") is not None:
+                event_data["item"]["id"] = curr_item_id
+            elif event_data.get("item_id") is not None:
+                event_data["item_id"] = curr_item_id
+            yield event_data
+        elif event.type == "run_item_stream_event" and event.item.type == "tool_call_output_item":
+            yield ResponsesAgentStreamEvent(
+                type="response.output_item.done",
+                item=event.item.to_input_item(),
+            )

@@ -9,7 +9,7 @@ from mlflow.types.responses import ResponsesAgentRequest, ResponsesAgentResponse
 # Load environment variables from .env.local if it exists
 load_dotenv(dotenv_path=".env.local", override=True)
 
-# need to import agent for our @invoke-registered function to be found
+# Import agent for our @invoke function to be found
 from agent_server import agent  # noqa: F401
 
 # Create your evaluation dataset
