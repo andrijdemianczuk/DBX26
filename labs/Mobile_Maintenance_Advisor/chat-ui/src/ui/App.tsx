@@ -17,25 +17,18 @@ const INTRO_ASSISTANT_MESSAGE =
 const RESET_ASSISTANT_MESSAGE = "New conversation started. What are you working on today?";
 
 export default function App() {
-  const [settings, setSettings] = useState<UiSettings>(() => {
-    const saved = localStorage.getItem("mma.settings.v1");
-    return saved ? { ...DEFAULTS, ...JSON.parse(saved) } : DEFAULTS;
-  });
+  const [settings, setSettings] = useState<UiSettings>(DEFAULTS);
 
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
-    const saved = localStorage.getItem("mma.messages.v1");
-    if (!saved) {
-      return [
-        { id: uid("sys"), role: "system", content: SYSTEM_PRIMER, createdAt: Date.now() },
-        {
-          id: uid("a"),
-          role: "assistant",
-          content: INTRO_ASSISTANT_MESSAGE,
-          createdAt: Date.now(),
-        },
-      ];
-    }
-    return JSON.parse(saved) as ChatMessage[];
+    return [
+      { id: uid("sys"), role: "system", content: SYSTEM_PRIMER, createdAt: Date.now() },
+      {
+        id: uid("a"),
+        role: "assistant",
+        content: INTRO_ASSISTANT_MESSAGE,
+        createdAt: Date.now(),
+      },
+    ];
   });
 
   const [draft, setDraft] = useState("");
@@ -43,11 +36,6 @@ export default function App() {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    localStorage.setItem("mma.settings.v1", JSON.stringify(settings));
-  }, [settings]);
-
-  useEffect(() => {
-    localStorage.setItem("mma.messages.v1", JSON.stringify(messages));
     // auto-scroll
     requestAnimationFrame(() => {
       const el = scrollerRef.current;
@@ -181,6 +169,7 @@ export default function App() {
             </div>
           </div>
 
+          {/*
           <div className="sidebar">
             <div className="kv">
               <div className="label">Title</div>
@@ -249,6 +238,7 @@ export default function App() {
               conversation storage in a DB / UC volume.
             </div>
           </div>
+          */}
         </div>
       </div>
     </div>
