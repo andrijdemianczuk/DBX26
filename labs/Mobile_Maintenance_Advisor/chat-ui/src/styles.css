@@ -118,11 +118,13 @@ button:disabled{
   display:flex;
   flex-direction:column;
   min-height: 70vh;
+  max-height: 70vh;
 }
 
 .messages{
   flex: 1;
   overflow:auto;
+  min-height: 0;
   padding: 14px;
   border-radius: 14px;
   background: rgba(0,0,0,0.18);

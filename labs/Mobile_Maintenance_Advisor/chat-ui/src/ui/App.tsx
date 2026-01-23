@@ -12,6 +12,9 @@ const DEFAULTS: UiSettings = {
 };
 
 const SYSTEM_PRIMER = `You are a helpful assistant. Ask clarifying questions when needed.`;
+const INTRO_ASSISTANT_MESSAGE =
+  "Hi — upload or describe the maintenance issue you're seeing, and I'll help you troubleshoot.\n\nTip: Try including the machine type, symptoms, and any error codes.";
+const RESET_ASSISTANT_MESSAGE = "New conversation started. What are you working on today?";
 
 export default function App() {
   const [settings, setSettings] = useState<UiSettings>(() => {
@@ -27,8 +30,7 @@ export default function App() {
         {
           id: uid("a"),
           role: "assistant",
-          content:
-            "Hi — upload or describe the maintenance issue you're seeing, and I'll help you troubleshoot.\n\nTip: Try including the machine type, symptoms, and any error codes.",
+          content: INTRO_ASSISTANT_MESSAGE,
           createdAt: Date.now(),
         },
       ];
@@ -73,7 +75,14 @@ export default function App() {
     setBusy(true);
 
     try {
-      const resp = await sendChat([...messages, userMsg], settings.streaming);
+      const payload = [...messages, userMsg].filter(
+        (msg) =>
+          !(
+            msg.role === "assistant" &&
+            (msg.content === INTRO_ASSISTANT_MESSAGE || msg.content === RESET_ASSISTANT_MESSAGE)
+          ),
+      );
+      const resp = await sendChat(payload, settings.streaming);
       const assistantMsg: ChatMessage = {
         id: uid("a"),
         role: "assistant",
@@ -100,8 +109,7 @@ export default function App() {
       {
         id: uid("a"),
         role: "assistant",
-        content:
-          "New conversation started. What are you working on today?",
+        content: RESET_ASSISTANT_MESSAGE,
         createdAt: Date.now(),
       },
     ];
