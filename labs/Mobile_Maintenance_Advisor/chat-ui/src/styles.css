@@ -223,9 +223,13 @@ a{ color: inherit; }
   display:flex;
   align-items:center;
   justify-content:center;
-  font-weight: 700;
   color: var(--accent);
   box-shadow: 0 0 18px rgba(0,0,0,0.05);
+}
+
+.badge svg {
+  width: 24px;
+  height: 24px;
 }
 
 .h1{

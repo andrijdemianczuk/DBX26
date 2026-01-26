@@ -130,7 +130,11 @@ export default function App() {
       <div className="card">
         <div className="header">
           <div className="brand">
-            <div className="badge">MM</div>
+            <div className="badge">
+              <svg viewBox="0 0 120 120" width="24" height="24" fill="currentColor">
+                <path d="M60 11.23L27.08 30.22l0 37.98L60 107.19l32.92-18.99l0-37.98L60 11.23z M60 21.65l23.94 13.82l0 27.64L60 90.94l-23.94-13.82l0-27.64L60 21.65z" />
+              </svg>
+            </div>
             <div>
               <div className="h1">{settings.title}</div>
               <div className="sub">{settings.subtitle}</div>
