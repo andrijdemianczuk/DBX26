@@ -1,12 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import type { ChatMessage, UiSettings } from "./types";
 import { sendChat } from "./api";
-import { clampCssColor, uid } from "./utils";
+import { uid } from "./utils";
 
 const DEFAULTS: UiSettings = {
   title: "Mobile Maintenance Advisor",
   subtitle: "Chat with the agent running on MLflow Agent Server",
-  accent: "#7c5cff",
   apiMode: "local-proxy",
   streaming: false,
 };
@@ -18,6 +17,18 @@ const RESET_ASSISTANT_MESSAGE = "New conversation started. What are you working 
 
 export default function App() {
   const [settings, setSettings] = useState<UiSettings>(DEFAULTS);
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    if (typeof window === "undefined") return "light";
+    const saved = window.localStorage.getItem("mma-theme");
+    if (saved === "light" || saved === "dark") return saved;
+    return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
+  const [palette, setPalette] = useState<"a" | "b" | "c" | "d">(() => {
+    if (typeof window === "undefined") return "a";
+    const saved = window.localStorage.getItem("mma-palette");
+    if (saved === "a" || saved === "b" || saved === "c" || saved === "d") return saved;
+    return "a";
+  });
 
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
     return [
@@ -43,13 +54,23 @@ export default function App() {
     });
   }, [messages]);
 
-  // Apply accent color to CSS var
   useEffect(() => {
-    document.documentElement.style.setProperty(
-      "--accent",
-      clampCssColor(settings.accent, DEFAULTS.accent),
-    );
-  }, [settings.accent]);
+    document.documentElement.dataset.theme = theme;
+    try {
+      window.localStorage.setItem("mma-theme", theme);
+    } catch {
+      // ignore storage errors (private mode, etc.)
+    }
+  }, [theme]);
+
+  useEffect(() => {
+    document.documentElement.dataset.palette = palette;
+    try {
+      window.localStorage.setItem("mma-palette", palette);
+    } catch {
+      // ignore storage errors (private mode, etc.)
+    }
+  }, [palette]);
 
   const chatOnly = useMemo(() => messages.filter((m) => m.role !== "system"), [messages]);
 
@@ -119,16 +140,18 @@ export default function App() {
             <button className="ghost" onClick={resetChat} disabled={busy}>
               Reset
             </button>
-            <button
-              className="primary"
-              onClick={() => {
-                const next = prompt("Accent color (hex like #7c5cff):", settings.accent);
-                if (next) setSettings((s) => ({ ...s, accent: next }));
-              }}
-              disabled={busy}
-              title="Quick theme tweak"
+            <select
+              className="select"
+              value={palette}
+              onChange={(e) => setPalette(e.target.value as "a" | "b" | "c" | "d")}
             >
-              Theme
+              <option value="a">Ink + Electric Blue</option>
+              <option value="b">Charcoal + Warm Gold</option>
+              <option value="c">Slate + Neon Lime</option>
+              <option value="d">Deep Navy + Violet</option>
+            </select>
+            <button className="ghost" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+              {theme === "dark" ? "Light mode" : "Dark mode"}
             </button>
           </div>
         </div>
@@ -186,15 +209,6 @@ export default function App() {
                 type="text"
                 value={settings.subtitle}
                 onChange={(e) => setSettings((s) => ({ ...s, subtitle: e.target.value }))}
-              />
-            </div>
-
-            <div className="kv">
-              <div className="label">Accent color</div>
-              <input
-                type="text"
-                value={settings.accent}
-                onChange={(e) => setSettings((s) => ({ ...s, accent: e.target.value }))}
               />
             </div>
 

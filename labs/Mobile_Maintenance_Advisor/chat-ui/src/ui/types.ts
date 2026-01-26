@@ -10,7 +10,6 @@ export interface ChatMessage {
 export interface UiSettings {
   title: string;
   subtitle: string;
-  accent: string;
   apiMode: "local-proxy";
   streaming: boolean;
 }

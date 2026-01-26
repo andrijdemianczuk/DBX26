@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "MLflow-compatible agent server with FastAPI"
 readme = "README.md"
 authors = [
-    { name = "Agent Developer", email = "developer@example.com" }
+    { name = "Agent Developer", email = "andrij.demianczuk@gmail.com" }
 ]
 requires-python = ">=3.11"
 dependencies = [
