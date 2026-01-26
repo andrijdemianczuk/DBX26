@@ -1,39 +1,45 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import type { ChatMessage, UiSettings } from "./types";
 import { sendChat } from "./api";
-import { clampCssColor, uid } from "./utils";
+import { uid } from "./utils";
 
 const DEFAULTS: UiSettings = {
   title: "Mobile Maintenance Advisor",
   subtitle: "Chat with the agent running on MLflow Agent Server",
-  accent: "#7c5cff",
   apiMode: "local-proxy",
   streaming: false,
 };
 
 const SYSTEM_PRIMER = `You are a helpful assistant. Ask clarifying questions when needed.`;
+const INTRO_ASSISTANT_MESSAGE =
+  "Hi — upload or describe the maintenance issue you're seeing, and I'll help you troubleshoot.\n\nTip: Try including the machine type, symptoms, and any error codes.";
+const RESET_ASSISTANT_MESSAGE = "New conversation started. What are you working on today?";
 
 export default function App() {
-  const [settings, setSettings] = useState<UiSettings>(() => {
-    const saved = localStorage.getItem("mma.settings.v1");
-    return saved ? { ...DEFAULTS, ...JSON.parse(saved) } : DEFAULTS;
+  const [settings, setSettings] = useState<UiSettings>(DEFAULTS);
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    if (typeof window === "undefined") return "light";
+    const saved = window.localStorage.getItem("mma-theme");
+    if (saved === "light" || saved === "dark") return saved;
+    return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
+  const [palette, setPalette] = useState<"a" | "b" | "c" | "d">(() => {
+    if (typeof window === "undefined") return "a";
+    const saved = window.localStorage.getItem("mma-palette");
+    if (saved === "a" || saved === "b" || saved === "c" || saved === "d") return saved;
+    return "a";
   });
 
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
-    const saved = localStorage.getItem("mma.messages.v1");
-    if (!saved) {
-      return [
-        { id: uid("sys"), role: "system", content: SYSTEM_PRIMER, createdAt: Date.now() },
-        {
-          id: uid("a"),
-          role: "assistant",
-          content:
-            "Hi — upload or describe the maintenance issue you're seeing, and I'll help you troubleshoot.\n\nTip: Try including the machine type, symptoms, and any error codes.",
-          createdAt: Date.now(),
-        },
-      ];
-    }
-    return JSON.parse(saved) as ChatMessage[];
+    return [
+      { id: uid("sys"), role: "system", content: SYSTEM_PRIMER, createdAt: Date.now() },
+      {
+        id: uid("a"),
+        role: "assistant",
+        content: INTRO_ASSISTANT_MESSAGE,
+        createdAt: Date.now(),
+      },
+    ];
   });
 
   const [draft, setDraft] = useState("");
@@ -41,11 +47,6 @@ export default function App() {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    localStorage.setItem("mma.settings.v1", JSON.stringify(settings));
-  }, [settings]);
-
-  useEffect(() => {
-    localStorage.setItem("mma.messages.v1", JSON.stringify(messages));
     // auto-scroll
     requestAnimationFrame(() => {
       const el = scrollerRef.current;
@@ -53,13 +54,23 @@ export default function App() {
     });
   }, [messages]);
 
-  // Apply accent color to CSS var
   useEffect(() => {
-    document.documentElement.style.setProperty(
-      "--accent",
-      clampCssColor(settings.accent, DEFAULTS.accent),
-    );
-  }, [settings.accent]);
+    document.documentElement.dataset.theme = theme;
+    try {
+      window.localStorage.setItem("mma-theme", theme);
+    } catch {
+      // ignore storage errors (private mode, etc.)
+    }
+  }, [theme]);
+
+  useEffect(() => {
+    document.documentElement.dataset.palette = palette;
+    try {
+      window.localStorage.setItem("mma-palette", palette);
+    } catch {
+      // ignore storage errors (private mode, etc.)
+    }
+  }, [palette]);
 
   const chatOnly = useMemo(() => messages.filter((m) => m.role !== "system"), [messages]);
 
@@ -73,7 +84,14 @@ export default function App() {
     setBusy(true);
 
     try {
-      const resp = await sendChat([...messages, userMsg], settings.streaming);
+      const payload = [...messages, userMsg].filter(
+        (msg) =>
+          !(
+            msg.role === "assistant" &&
+            (msg.content === INTRO_ASSISTANT_MESSAGE || msg.content === RESET_ASSISTANT_MESSAGE)
+          ),
+      );
+      const resp = await sendChat(payload, settings.streaming);
       const assistantMsg: ChatMessage = {
         id: uid("a"),
         role: "assistant",
@@ -100,8 +118,7 @@ export default function App() {
       {
         id: uid("a"),
         role: "assistant",
-        content:
-          "New conversation started. What are you working on today?",
+        content: RESET_ASSISTANT_MESSAGE,
         createdAt: Date.now(),
       },
     ];
@@ -123,16 +140,18 @@ export default function App() {
             <button className="ghost" onClick={resetChat} disabled={busy}>
               Reset
             </button>
-            <button
-              className="primary"
-              onClick={() => {
-                const next = prompt("Accent color (hex like #7c5cff):", settings.accent);
-                if (next) setSettings((s) => ({ ...s, accent: next }));
-              }}
-              disabled={busy}
-              title="Quick theme tweak"
+            <select
+              className="select"
+              value={palette}
+              onChange={(e) => setPalette(e.target.value as "a" | "b" | "c" | "d")}
             >
-              Theme
+              <option value="a">Ink + Electric Blue</option>
+              <option value="b">Charcoal + Warm Gold</option>
+              <option value="c">Slate + Neon Lime</option>
+              <option value="d">Deep Navy + Violet</option>
+            </select>
+            <button className="ghost" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+              {theme === "dark" ? "Light mode" : "Dark mode"}
             </button>
           </div>
         </div>
@@ -173,6 +192,7 @@ export default function App() {
             </div>
           </div>
 
+          {/*
           <div className="sidebar">
             <div className="kv">
               <div className="label">Title</div>
@@ -189,15 +209,6 @@ export default function App() {
                 type="text"
                 value={settings.subtitle}
                 onChange={(e) => setSettings((s) => ({ ...s, subtitle: e.target.value }))}
-              />
-            </div>
-
-            <div className="kv">
-              <div className="label">Accent color</div>
-              <input
-                type="text"
-                value={settings.accent}
-                onChange={(e) => setSettings((s) => ({ ...s, accent: e.target.value }))}
               />
             </div>
 
@@ -241,6 +252,7 @@ export default function App() {
               conversation storage in a DB / UC volume.
             </div>
           </div>
+          */}
         </div>
       </div>
     </div>
