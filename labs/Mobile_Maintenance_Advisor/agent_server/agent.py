@@ -49,6 +49,10 @@ def _normalize_input_messages(messages: list[dict]) -> list[dict]:
                 return {"type": default_type, "text": part}
             if isinstance(part, dict):
                 p = dict(part)
+                p_type = p.get("type") or default_type
+                if isinstance(p_type, str) and p_type.startswith("input_") and p_type != "input_text":
+                    p["type"] = p_type
+                    return p
                 # Normalize text field
                 if "text" not in p and "content" in p and isinstance(p["content"], str):
                     p["text"] = p["content"]

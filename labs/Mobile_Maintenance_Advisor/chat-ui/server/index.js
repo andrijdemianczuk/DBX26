@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(express.json({ limit: "2mb" }));
+app.use(express.json({ limit: "25mb" }));
 
 const PORT = Number(process.env.CHAT_APP_PORT || process.env.PORT || 3000);
 const API_PROXY = process.env.API_PROXY || "http://localhost:8000/invocations";

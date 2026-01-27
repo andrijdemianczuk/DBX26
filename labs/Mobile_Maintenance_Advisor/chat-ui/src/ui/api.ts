@@ -1,15 +1,42 @@
-import type { ChatMessage } from "./types";
+import type { AudioAttachment, ChatMessage } from "./types";
 
 export interface ChatResponse {
   text: string;
   raw?: unknown;
 }
 
+interface InputTextPart {
+  type: "input_text";
+  text: string;
+}
+
+interface InputAudioPart {
+  type: "input_audio";
+  audio: {
+    data: string;
+    format: AudioAttachment["format"];
+  };
+}
+
 export async function sendChat(messages: ChatMessage[], stream: boolean): Promise<ChatResponse> {
   // Convert to Responses API-style inputs
   const input = messages
     .filter((m) => m.role !== "system" || m.content.trim().length > 0)
-    .map((m) => ({ role: m.role, content: m.content }));
+    .map((m) => {
+      if (m.role === "assistant") {
+        return { role: m.role, content: m.content };
+      }
+
+      const parts: Array<InputTextPart | InputAudioPart> = [];
+      if (m.content.trim().length > 0) {
+        parts.push({ type: "input_text", text: m.content });
+      }
+      if (m.audio) {
+        parts.push({ type: "input_audio", audio: { data: m.audio.data, format: m.audio.format } });
+      }
+
+      return { role: m.role, content: parts.length > 0 ? parts : m.content };
+    });
 
   const res = await fetch("/api/chat", {
     method: "POST",
