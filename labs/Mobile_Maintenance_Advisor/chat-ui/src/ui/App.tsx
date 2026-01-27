@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import type { ChatMessage, UiSettings } from "./types";
+import type { AudioAttachment, ChatMessage, UiSettings } from "./types";
 import { sendChat } from "./api";
-import { uid } from "./utils";
+import { fileToBase64, formatBytes, uid } from "./utils";
 
 const DEFAULTS: UiSettings = {
   title: "Mobile Maintenance Advisor",
@@ -14,6 +14,24 @@ const SYSTEM_PRIMER = `You are a helpful assistant. Ask clarifying questions whe
 const INTRO_ASSISTANT_MESSAGE =
   "Hi — upload or describe the maintenance issue you're seeing, and I'll help you troubleshoot.\n\nTip: Try including the machine type, symptoms, and any error codes.";
 const RESET_ASSISTANT_MESSAGE = "New conversation started. What are you working on today?";
+
+const AUDIO_MIME_TO_FORMAT: Record<string, AudioAttachment["format"]> = {
+  "audio/mpeg": "mp3",
+  "audio/mp3": "mp3",
+  "audio/wav": "wav",
+  "audio/x-wav": "wav",
+  "audio/wave": "wav",
+  "audio/mp4": "m4a",
+  "audio/x-m4a": "m4a",
+  "audio/webm": "webm",
+};
+
+const AUDIO_EXT_TO_FORMAT: Record<string, AudioAttachment["format"]> = {
+  mp3: "mp3",
+  wav: "wav",
+  m4a: "m4a",
+  webm: "webm",
+};
 
 export default function App() {
   const [settings, setSettings] = useState<UiSettings>(DEFAULTS);
@@ -44,7 +62,11 @@ export default function App() {
 
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
+  const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [audioFormat, setAudioFormat] = useState<AudioAttachment["format"] | null>(null);
+  const [audioError, setAudioError] = useState<string | null>(null);
   const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     // auto-scroll
@@ -74,14 +96,69 @@ export default function App() {
 
   const chatOnly = useMemo(() => messages.filter((m) => m.role !== "system"), [messages]);
 
+  function inferAudioFormat(file: File): AudioAttachment["format"] | null {
+    if (file.type && AUDIO_MIME_TO_FORMAT[file.type]) return AUDIO_MIME_TO_FORMAT[file.type];
+    const ext = file.name.split(".").pop()?.toLowerCase();
+    if (ext && AUDIO_EXT_TO_FORMAT[ext]) return AUDIO_EXT_TO_FORMAT[ext];
+    return null;
+  }
+
+  function onSelectAudioFile(file: File | null) {
+    if (!file) {
+      setAudioFile(null);
+      setAudioFormat(null);
+      setAudioError(null);
+      return;
+    }
+    const format = inferAudioFormat(file);
+    if (!format) {
+      setAudioFile(null);
+      setAudioFormat(null);
+      setAudioError("Only .wav, .mp3, .m4a, or .webm audio files are supported.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+    setAudioFile(file);
+    setAudioFormat(format);
+    setAudioError(null);
+  }
+
   async function onSend() {
     const content = draft.trim();
-    if (!content || busy) return;
+    if ((!content && !audioFile) || busy) return;
 
-    const userMsg: ChatMessage = { id: uid("u"), role: "user", content, createdAt: Date.now() };
+    let audioAttachment: AudioAttachment | undefined;
+    setBusy(true);
+    if (audioFile && audioFormat) {
+      try {
+        const data = await fileToBase64(audioFile);
+        audioAttachment = {
+          name: audioFile.name,
+          mime: audioFile.type || `audio/${audioFormat}`,
+          size: audioFile.size,
+          format: audioFormat,
+          data,
+        };
+      } catch (err: any) {
+        setBusy(false);
+        setAudioError(err?.message ?? "Failed to read the audio file.");
+        return;
+      }
+    }
+
+    const userMsg: ChatMessage = {
+      id: uid("u"),
+      role: "user",
+      content,
+      createdAt: Date.now(),
+      audio: audioAttachment,
+    };
     setMessages((prev) => [...prev, userMsg]);
     setDraft("");
-    setBusy(true);
+    setAudioFile(null);
+    setAudioFormat(null);
+    setAudioError(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
 
     try {
       const payload = [...messages, userMsg].filter(
@@ -166,7 +243,17 @@ export default function App() {
               {chatOnly.map((m) => (
                 <div key={m.id} className={`msg ${m.role}`}>
                   <div className="avatar">{m.role === "user" ? "You" : "AI"}</div>
-                  <div className="bubble">{m.content}</div>
+                  <div className="bubble">
+                    {m.content && <div>{m.content}</div>}
+                    {m.audio && (
+                      <div className="attachment">
+                        <div className="attachment-title">Audio attachment</div>
+                        <div className="attachment-meta">
+                          {m.audio.name} · {m.audio.format.toUpperCase()} · {formatBytes(m.audio.size)}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
               {busy && (
@@ -178,16 +265,52 @@ export default function App() {
             </div>
 
             <div className="composer">
-              <textarea
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                placeholder="Type a message…"
-                onKeyDown={(e) => {
-                  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") onSend();
-                }}
-                disabled={busy}
-              />
-              <button className="primary" onClick={onSend} disabled={busy || !draft.trim()}>
+              <div className="composer-body">
+                <textarea
+                  value={draft}
+                  onChange={(e) => setDraft(e.target.value)}
+                  placeholder="Type a message…"
+                  onKeyDown={(e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") onSend();
+                  }}
+                  disabled={busy}
+                />
+                <div className="composer-tools">
+                  <input
+                    ref={fileInputRef}
+                    className="file-input"
+                    type="file"
+                    accept="audio/*"
+                    onChange={(e) => onSelectAudioFile(e.target.files?.[0] ?? null)}
+                    disabled={busy}
+                  />
+                  <button
+                    className="ghost"
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={busy}
+                  >
+                    Attach audio
+                  </button>
+                  {audioFile && (
+                    <button
+                      className="ghost"
+                      type="button"
+                      onClick={() => onSelectAudioFile(null)}
+                      disabled={busy}
+                    >
+                      Remove
+                    </button>
+                  )}
+                  {audioError && <div className="error-text">{audioError}</div>}
+                </div>
+                {audioFile && audioFormat && (
+                  <div className="attachment-preview">
+                    {audioFile.name} · {audioFormat.toUpperCase()} · {formatBytes(audioFile.size)}
+                  </div>
+                )}
+              </div>
+              <button className="primary" onClick={onSend} disabled={busy || (!draft.trim() && !audioFile)}>
                 Send
               </button>
             </div>
