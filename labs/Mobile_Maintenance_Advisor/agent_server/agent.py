@@ -10,13 +10,30 @@ from mlflow.types.responses import (
     ResponsesAgentRequest,
     ResponsesAgentResponse,
     ResponsesAgentStreamEvent,
+    output_to_responses_items_stream,
+    to_chat_completions_input,
 )
 
+from agent_server.tools import TOOL_REGISTRY
 from agent_server.utils import (
     get_databricks_host_from_env,
     get_user_workspace_client,
     process_agent_stream_events,
 )
+
+#Databricks MLFlow flavour of LangChain for Databricks interop
+# from databricks_langchain import (
+#     ChatDatabricks,
+#     UCFunctionToolkit,
+#     VectorSearchRetrieverTool,
+# )
+
+#Standard Langchain libs
+# from langchain_core.messages import AIMessage, AIMessageChunk, AnyMessage
+# from langchain_core.runnables import RunnableConfig, RunnableLambda
+# from langchain_core.tools import BaseTool
+# from langchain.tools import tool
+# from langchain_openai import ChatOpenAI
 
 
 def _normalize_input_messages(messages: list[dict]) -> list[dict]:
@@ -101,9 +118,13 @@ async def init_mcp_server():
 def create_coding_agent(mcp_server: McpServer) -> Agent:
     return Agent(
         name="code execution agent",
-        instructions="You are a code execution agent. You can execute code and return the results.",
+        instructions=(
+            "You are a code execution agent. You can execute code and return the results. "
+            "When a user asks to test connectivity, call the connectivity_check tool."
+        ),
         model="databricks-gpt-5-2",
         mcp_servers=[mcp_server],
+        tools=TOOL_REGISTRY,
     )
 
 
