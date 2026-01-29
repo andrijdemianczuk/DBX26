@@ -65,6 +65,7 @@ export default function App() {
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [audioFormat, setAudioFormat] = useState<AudioAttachment["format"] | null>(null);
   const [audioError, setAudioError] = useState<string | null>(null);
+  const [pinnedAudio, setPinnedAudio] = useState<AudioAttachment | null>(null);
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -153,6 +154,11 @@ export default function App() {
       createdAt: Date.now(),
       audio: audioAttachment,
     };
+    const activeAudio = audioAttachment ?? pinnedAudio ?? undefined;
+    const outboundMsg = activeAudio ? { ...userMsg, audio: activeAudio } : userMsg;
+    if (audioAttachment) {
+      setPinnedAudio(audioAttachment);
+    }
     setMessages((prev) => [...prev, userMsg]);
     setDraft("");
     setAudioFile(null);
@@ -161,13 +167,20 @@ export default function App() {
     if (fileInputRef.current) fileInputRef.current.value = "";
 
     try {
-      const payload = [...messages, userMsg].filter(
-        (msg) =>
-          !(
-            msg.role === "assistant" &&
-            (msg.content === INTRO_ASSISTANT_MESSAGE || msg.content === RESET_ASSISTANT_MESSAGE)
-          ),
-      );
+      const shouldPinAudio = Boolean(pinnedAudio && !audioAttachment);
+      const payload = [...messages, outboundMsg]
+        .map((msg, index, arr) => {
+          if (!shouldPinAudio) return msg;
+          if (index === arr.length - 1) return msg;
+          return { ...msg, audio: undefined };
+        })
+        .filter(
+          (msg) =>
+            !(
+              msg.role === "assistant" &&
+              (msg.content === INTRO_ASSISTANT_MESSAGE || msg.content === RESET_ASSISTANT_MESSAGE)
+            ),
+        );
       const resp = await sendChat(payload, settings.streaming);
       const assistantMsg: ChatMessage = {
         id: uid("a"),
@@ -200,6 +213,12 @@ export default function App() {
       },
     ];
     setMessages(fresh);
+    setDraft("");
+    setAudioFile(null);
+    setAudioFormat(null);
+    setAudioError(null);
+    setPinnedAudio(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
   return (
