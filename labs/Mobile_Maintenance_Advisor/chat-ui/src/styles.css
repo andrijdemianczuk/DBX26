@@ -186,9 +186,15 @@ body{
 a{ color: inherit; }
 
 .container{
-  max-width: 1100px;
+  max-width: 820px;
   margin: 0 auto;
   padding: 18px;
+}
+
+@media (max-width: 640px){
+  .container{
+    padding: 14px;
+  }
 }
 
 .card{
@@ -247,6 +253,7 @@ a{ color: inherit; }
   display:flex;
   gap: 14px;
   align-items:center;
+  flex-wrap: wrap;
 }
 
 button{
@@ -273,15 +280,32 @@ button:disabled{
   cursor: not-allowed;
 }
 
-.main{
-  display:grid;
-  grid-template-columns: 1fr 320px;
-  gap: 14px;
-  padding: 14px;
+@media (max-width: 640px){
+  .header{
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .row{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .row button,
+  .row .select{
+    width: 100%;
+  }
 }
 
-@media (max-width: 900px){
-  .main{ grid-template-columns: 1fr; }
+.main{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  padding: 14px;
 }
 
 .chat{
