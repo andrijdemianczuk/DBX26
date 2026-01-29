@@ -13,7 +13,7 @@ const DEFAULTS: UiSettings = {
 const SYSTEM_PRIMER = `You are a helpful assistant. Ask clarifying questions when needed.`;
 const INTRO_ASSISTANT_MESSAGE =
   "Hi — upload or describe the maintenance issue you're seeing, and I'll help you troubleshoot.\n\nTip: Try including the machine type, symptoms, and any error codes.";
-const RESET_ASSISTANT_MESSAGE = "New conversation started. What are you working on today?";
+const RESET_ASSISTANT_MESSAGE = "New conversation started. Please upload or describe the maintenance issue you're seeing, and I'll help you troubleshoot.\n\nTip: Try including the machine type, symptoms, and any error codes.";
 
 const AUDIO_MIME_TO_FORMAT: Record<string, AudioAttachment["format"]> = {
   "audio/mpeg": "mp3",
@@ -66,6 +66,16 @@ export default function App() {
   const [audioFormat, setAudioFormat] = useState<AudioAttachment["format"] | null>(null);
   const [audioError, setAudioError] = useState<string | null>(null);
   const [pinnedAudio, setPinnedAudio] = useState<AudioAttachment | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingLevel, setRecordingLevel] = useState(0);
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const recorderChunksRef = useRef<Blob[]>([]);
+  const recorderStreamRef = useRef<MediaStream | null>(null);
+  const recorderTimeoutRef = useRef<number | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const sourceNodeRef = useRef<MediaStreamAudioSourceNode | null>(null);
+  const rafRef = useRef<number | null>(null);
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -94,6 +104,18 @@ export default function App() {
       // ignore storage errors (private mode, etc.)
     }
   }, [palette]);
+
+  useEffect(() => {
+    return () => {
+      recorderRef.current?.stop();
+      recorderStreamRef.current?.getTracks().forEach((track) => track.stop());
+      if (recorderTimeoutRef.current) window.clearTimeout(recorderTimeoutRef.current);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      analyserRef.current?.disconnect();
+      sourceNodeRef.current?.disconnect();
+      audioContextRef.current?.close();
+    };
+  }, []);
 
   const chatOnly = useMemo(() => messages.filter((m) => m.role !== "system"), [messages]);
 
@@ -124,9 +146,113 @@ export default function App() {
     setAudioError(null);
   }
 
+  function pickRecorderMimeType() {
+    if (typeof MediaRecorder === "undefined") return "";
+    const candidates = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"];
+    return candidates.find((type) => MediaRecorder.isTypeSupported(type)) ?? "";
+  }
+
+  function mimeTypeToFormat(mimeType: string): AudioAttachment["format"] | null {
+    if (mimeType.includes("webm")) return "webm";
+    if (mimeType.includes("mp4")) return "m4a";
+    if (mimeType.includes("wav")) return "wav";
+    if (mimeType.includes("mpeg") || mimeType.includes("mp3")) return "mp3";
+    return null;
+  }
+
+  function stopMeter() {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = null;
+    analyserRef.current?.disconnect();
+    sourceNodeRef.current?.disconnect();
+    analyserRef.current = null;
+    sourceNodeRef.current = null;
+    audioContextRef.current?.close();
+    audioContextRef.current = null;
+    setRecordingLevel(0);
+  }
+
+  function startMeter(stream: MediaStream) {
+    if (typeof AudioContext === "undefined") return;
+    const audioContext = new AudioContext();
+    const analyser = audioContext.createAnalyser();
+    analyser.fftSize = 512;
+    const source = audioContext.createMediaStreamSource(stream);
+    source.connect(analyser);
+    audioContextRef.current = audioContext;
+    analyserRef.current = analyser;
+    sourceNodeRef.current = source;
+
+    const data = new Uint8Array(analyser.fftSize);
+    const tick = () => {
+      analyser.getByteTimeDomainData(data);
+      let sum = 0;
+      for (let i = 0; i < data.length; i += 1) {
+        const v = (data[i] - 128) / 128;
+        sum += v * v;
+      }
+      const rms = Math.sqrt(sum / data.length);
+      setRecordingLevel(rms);
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    tick();
+  }
+
+  async function startRecording() {
+    if (isRecording) return;
+    if (typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) {
+      setAudioError("Recording isn't supported in this browser.");
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mimeType = pickRecorderMimeType();
+      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      recorderChunksRef.current = [];
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) recorderChunksRef.current.push(event.data);
+      };
+      recorder.onstop = () => {
+        const blob = new Blob(recorderChunksRef.current, { type: recorder.mimeType });
+        const format = mimeTypeToFormat(recorder.mimeType) ?? "webm";
+        const filename = `recording-${Date.now()}.${format}`;
+        const file = new File([blob], filename, { type: recorder.mimeType || `audio/${format}` });
+        setAudioFile(file);
+        setAudioFormat(format);
+        setAudioError(null);
+        recorderChunksRef.current = [];
+      };
+      recorderRef.current = recorder;
+      recorderStreamRef.current = stream;
+      setIsRecording(true);
+      setAudioError(null);
+      startMeter(stream);
+      recorder.start();
+      recorderTimeoutRef.current = window.setTimeout(() => {
+        stopRecording();
+      }, 30000);
+    } catch (err: any) {
+      setAudioError(err?.message ?? "Microphone access was denied.");
+      recorderStreamRef.current?.getTracks().forEach((track) => track.stop());
+      recorderStreamRef.current = null;
+    }
+  }
+
+  function stopRecording() {
+    if (!isRecording) return;
+    recorderRef.current?.stop();
+    recorderStreamRef.current?.getTracks().forEach((track) => track.stop());
+    recorderStreamRef.current = null;
+    recorderRef.current = null;
+    setIsRecording(false);
+    if (recorderTimeoutRef.current) window.clearTimeout(recorderTimeoutRef.current);
+    recorderTimeoutRef.current = null;
+    stopMeter();
+  }
+
   async function onSend() {
     const content = draft.trim();
-    if ((!content && !audioFile) || busy) return;
+    if ((!content && !audioFile) || busy || isRecording) return;
 
     let audioAttachment: AudioAttachment | undefined;
     setBusy(true);
@@ -164,6 +290,7 @@ export default function App() {
     setAudioFile(null);
     setAudioFormat(null);
     setAudioError(null);
+    setIsRecording(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
 
     try {
@@ -218,6 +345,14 @@ export default function App() {
     setAudioFormat(null);
     setAudioError(null);
     setPinnedAudio(null);
+    setIsRecording(false);
+    recorderRef.current?.stop();
+    recorderStreamRef.current?.getTracks().forEach((track) => track.stop());
+    recorderStreamRef.current = null;
+    recorderRef.current = null;
+    if (recorderTimeoutRef.current) window.clearTimeout(recorderTimeoutRef.current);
+    recorderTimeoutRef.current = null;
+    stopMeter();
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
@@ -301,13 +436,21 @@ export default function App() {
                     type="file"
                     accept="audio/*"
                     onChange={(e) => onSelectAudioFile(e.target.files?.[0] ?? null)}
-                    disabled={busy}
+                    disabled={busy || isRecording}
                   />
                   <button
                     className="ghost"
                     type="button"
-                    onClick={() => fileInputRef.current?.click()}
+                    onClick={isRecording ? stopRecording : startRecording}
                     disabled={busy}
+                  >
+                    {isRecording ? "Stop recording" : "Record audio"}
+                  </button>
+                  <button
+                    className="ghost"
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={busy || isRecording}
                   >
                     Attach audio
                   </button>
@@ -316,10 +459,18 @@ export default function App() {
                       className="ghost"
                       type="button"
                       onClick={() => onSelectAudioFile(null)}
-                      disabled={busy}
+                      disabled={busy || isRecording}
                     >
                       Remove
                     </button>
+                  )}
+                  {isRecording && (
+                    <div className="recording-indicator">
+                      Recording…
+                      <div className="recording-meter">
+                        <span style={{ width: `${Math.min(100, Math.round(recordingLevel * 220))}%` }} />
+                      </div>
+                    </div>
                   )}
                   {audioError && <div className="error-text">{audioError}</div>}
                 </div>
@@ -337,68 +488,6 @@ export default function App() {
               Tip: Use <span className="mono">Ctrl/⌘ + Enter</span> to send.
             </div>
           </div>
-
-          {/*
-          <div className="sidebar">
-            <div className="kv">
-              <div className="label">Title</div>
-              <input
-                type="text"
-                value={settings.title}
-                onChange={(e) => setSettings((s) => ({ ...s, title: e.target.value }))}
-              />
-            </div>
-
-            <div className="kv">
-              <div className="label">Subtitle</div>
-              <input
-                type="text"
-                value={settings.subtitle}
-                onChange={(e) => setSettings((s) => ({ ...s, subtitle: e.target.value }))}
-              />
-            </div>
-
-            <hr />
-
-            <div className="kv">
-              <div className="label">Conversation memory (local)</div>
-              <div className="small">
-                Messages + settings are stored in your browser <span className="mono">localStorage</span>.
-                Use <b>Reset</b> to clear the conversation.
-              </div>
-            </div>
-
-            <hr />
-
-            <div className="kv">
-              <div className="label">Agent endpoint</div>
-              <div className="small">
-                The Node server proxies <span className="mono">/api/chat</span> to the MLflow Agent Server’s{" "}
-                <span className="mono">/invocations</span> endpoint. (Configured via <span className="mono">API_PROXY</span>.)
-              </div>
-            </div>
-
-            <div className="kv">
-              <button
-                onClick={async () => {
-                  try {
-                    const r = await fetch("/api/health");
-                    alert(r.ok ? "Backend OK" : "Backend error");
-                  } catch (e: any) {
-                    alert(e?.message ?? String(e));
-                  }
-                }}
-              >
-                Test backend
-              </button>
-            </div>
-
-            <div className="small">
-              Next steps: add a left nav, file upload, “tool call” rendering, feedback buttons, and per-user
-              conversation storage in a DB / UC volume.
-            </div>
-          </div>
-          */}
         </div>
       </div>
     </div>

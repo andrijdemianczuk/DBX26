@@ -425,6 +425,32 @@ button:disabled{
   color: var(--error);
 }
 
+.recording-indicator{
+  font-size: 12px;
+  color: var(--warning);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recording-meter{
+  position: relative;
+  width: 90px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(14,26,36,0.12);
+  overflow: hidden;
+}
+
+.recording-meter span{
+  position: absolute;
+  inset: 0;
+  width: 0%;
+  background: var(--warning);
+  border-radius: 999px;
+  transition: width 60ms linear;
+}
+
 textarea{
   flex: 1;
   resize: none;
