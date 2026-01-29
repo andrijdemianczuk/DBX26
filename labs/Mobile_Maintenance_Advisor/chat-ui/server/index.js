@@ -11,6 +11,17 @@ app.use(express.json({ limit: "25mb" }));
 
 const PORT = Number(process.env.CHAT_APP_PORT || process.env.PORT || 3000);
 const API_PROXY = process.env.API_PROXY || "http://localhost:8000/invocations";
+const TRANSCRIBE_PROXY =
+  process.env.API_TRANSCRIBE ||
+  (() => {
+    try {
+      const url = new URL(API_PROXY);
+      url.pathname = url.pathname.replace(/\/invocations\/?$/, "/transcribe");
+      return url.toString();
+    } catch {
+      return API_PROXY.replace(/\/invocations\/?$/, "/transcribe");
+    }
+  })();
 
 /**
  * Best-effort extraction of assistant text from an MLflow ResponsesAgentResponse.
@@ -61,8 +72,52 @@ function extractText(payload) {
   return "";
 }
 
+async function transcribeAudioPart(part) {
+  const audio = part?.audio;
+  if (!audio?.data || !audio?.format) return "";
+
+  const res = await fetch(TRANSCRIBE_PROXY, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ audio_b64: audio.data, audio_format: audio.format }),
+  });
+
+  const text = await res.text().catch(() => "");
+  if (!res.ok) {
+    throw new Error(text || res.statusText);
+  }
+
+  try {
+    const json = JSON.parse(text);
+    return json.text || "";
+  } catch {
+    return text || "";
+  }
+}
+
+async function replaceAudioParts(input) {
+  const updated = [];
+  for (const message of input) {
+    if (!message || !Array.isArray(message.content)) {
+      updated.push(message);
+      continue;
+    }
+    const nextParts = [];
+    for (const part of message.content) {
+      if (part?.type === "input_audio") {
+        const transcript = await transcribeAudioPart(part);
+        if (transcript) nextParts.push({ type: "input_text", text: transcript });
+        continue;
+      }
+      nextParts.push(part);
+    }
+    updated.push({ ...message, content: nextParts });
+  }
+  return updated;
+}
+
 app.get("/api/health", (_req, res) => {
-  res.json({ ok: true, apiProxy: API_PROXY });
+  res.json({ ok: true, apiProxy: API_PROXY, transcribeProxy: TRANSCRIBE_PROXY });
 });
 
 app.post("/api/chat", async (req, res) => {
@@ -71,7 +126,14 @@ app.post("/api/chat", async (req, res) => {
     return res.status(400).send("Body must be { input: [{role, content}, ...], stream?: boolean }");
   }
 
-  const upstreamBody = { input, stream: Boolean(stream) };
+  let normalizedInput = input;
+  try {
+    normalizedInput = await replaceAudioParts(input);
+  } catch (err) {
+    return res.status(400).send(`Audio transcription failed: ${err?.message ?? String(err)}`);
+  }
+
+  const upstreamBody = { input: normalizedInput, stream: Boolean(stream) };
 
   // Non-streaming (default)
   if (!upstreamBody.stream) {

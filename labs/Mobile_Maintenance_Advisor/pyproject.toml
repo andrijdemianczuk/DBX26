@@ -13,6 +13,7 @@ dependencies = [
     "databricks-openai>=0.9.0",
     "mlflow>=3.8.0rc0",
     "openai-agents>=0.4.1",
+    "openai>=1.0.0",
     "python-dotenv",
     "langgraph",
     "databricks-agents",

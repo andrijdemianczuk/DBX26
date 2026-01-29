@@ -120,7 +120,9 @@ def create_coding_agent(mcp_server: McpServer) -> Agent:
         name="code execution agent",
         instructions=(
             "You are a code execution agent. You can execute code and return the results. "
-            "When a user asks to test connectivity, call the connectivity_check tool."
+            "When a user asks to test connectivity, call the connectivity_check tool. "
+            "When a user asks to transcribe audio, call transcribe_audio with the audio "
+            "data and format from the latest input_audio part."
         ),
         model="databricks-gpt-5-2",
         mcp_servers=[mcp_server],
