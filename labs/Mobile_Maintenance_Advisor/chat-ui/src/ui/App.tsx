@@ -439,7 +439,7 @@ export default function App() {
                     disabled={busy || isRecording}
                   />
                   <button
-                    className="ghost"
+                    className="record-btn"
                     type="button"
                     onClick={isRecording ? stopRecording : startRecording}
                     disabled={busy}

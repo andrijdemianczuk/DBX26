@@ -272,6 +272,15 @@ button.primary{
   box-shadow: 0 10px 22px rgba(0,0,0,0.12);
 }
 button.primary:hover{ background: var(--accent-2); }
+button.record-btn{
+  background: var(--error);
+  border: 1px solid var(--border);
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.16);
+}
+button.record-btn:hover{
+  background: color-mix(in srgb, var(--error), #000000 14%);
+}
 button.ghost{
   background: transparent;
 }
