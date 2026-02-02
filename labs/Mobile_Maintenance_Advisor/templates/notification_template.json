@@ -1,0 +1,113 @@
+{
+  "notification": {
+    "type": "M2",
+    "type_description": "Malfunction Report",
+    "priority": "HIGH",
+    "reported_at": "2026-02-02T09:15:00-07:00",
+    "reported_by": {
+      "name": "A. Demianczuk",
+      "role": "Operations",
+      "contact": "CCR ext. 2345"
+    },
+    "plant_context": {
+      "site": "Calgary Gas Plant",
+      "area": "Unit 200 - Compressor Building",
+      "work_center": "MECH-U200",
+      "planner_group": "PG-MECH"
+    },
+    "technical_object": {
+      "functional_location": "U200-COMP-TRAIN-01",
+      "equipment_number": "200-P-114A",
+      "equipment_description": "Lube Oil Pump A",
+      "physical_location": {
+        "detail": "Mezzanine north side near compressor skid",
+        "access_notes": "Access via stairwell B; tight clearance around skid"
+      }
+    },
+    "problem": {
+      "short_text": "LO Pump A low pressure + abnormal noise; standby required",
+      "long_text": {
+        "symptom": "Intermittent low lube oil pressure alarms on C-201 while LO Pump A running; audible grinding from pump.",
+        "start_time": "2026-02-02T08:40:00-07:00",
+        "operating_state": "steady_state",
+        "evidence": [
+          {
+            "type": "pressure",
+            "tag_or_source": "local gauge",
+            "observed_range": {
+              "min_kpa": 220,
+              "max_kpa": 310
+            },
+            "expected_kpa": 350
+          },
+          {
+            "type": "sound",
+            "description": "audible grinding / rough running noise at pump casing"
+          },
+          {
+            "type": "vibration",
+            "description": "noticeably higher vibration by feel compared to normal"
+          }
+        ],
+        "repeatability": "worsening_over_20_min",
+        "immediate_actions_taken": [
+          {
+            "action": "switched_to_standby_pump",
+            "details": "Switched from LO Pump A to LO Pump B",
+            "time": "2026-02-02T09:05:00-07:00",
+            "result": {
+              "pressure_stabilized_kpa": 355,
+              "noise_ceased": true
+            }
+          }
+        ],
+        "additional_notes": "No visible external leaks observed. Suction strainer DP not available locally."
+      }
+    },
+    "impact": {
+      "safety_impact": {
+        "level": "POTENTIAL",
+        "note": "Loss of lube oil can cause compressor damage/trip."
+      },
+      "production_impact": {
+        "level": "MAJOR_RISK",
+        "note": "Single remaining pump running; compressor trip risk if Pump B fails."
+      },
+      "breakdown": false
+    },
+    "timing": {
+      "malfunction_start": "2026-02-02T08:40:00-07:00",
+      "malfunction_end": "2026-02-02T09:05:00-07:00",
+      "requested_by": "2026-02-03"
+    },
+    "work_requirements": {
+      "isolation_required": true,
+      "isolation_types": ["LOTO"],
+      "permits_possible": ["mechanical_permit"],
+      "special_requirements": ["guard_removal", "verify_depressurized_if_applicable"]
+    },
+    "classification": {
+      "object_part": "ROTATING_ELEMENT",
+      "damage": "ABNORMAL_NOISE_LOW_OUTPUT",
+      "cause": "UNKNOWN_SUSPECT_BEARING_OR_SUCTION_RESTRICTION",
+      "requested_activity": ["INSPECT", "REPAIR_OR_REPLACE", "CHECK_STRAINER_SUCTION"]
+    },
+    "attachments": [
+      {
+        "type": "video",
+        "description": "15s clip of grinding noise",
+        "reference": "attachment://pumpA_noise_15s.mp4"
+      },
+      {
+        "type": "photo",
+        "description": "Pump nameplate photo",
+        "reference": "attachment://200-P-114A_nameplate.jpg"
+      },
+      {
+        "type": "trend",
+        "description": "DCS trend of LO pressure during event",
+        "reference": "attachment://lo_pressure_trend.png"
+      }
+    ]
+  }
+}

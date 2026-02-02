@@ -1,0 +1,19 @@
+{
+  "notification_type": "M2",
+  "priority": "HIGH",
+  "reported_at": "2026-02-02T09:15:00-07:00",
+  "reported_by": {
+    "name": "A. Demianczuk",
+    "contact": "CCR ext. 2345"
+  },
+  "plant": {
+    "site": "Calgary Gas Plant",
+    "area": "Unit 200 - Compressor Building"
+  },
+  "technical_object": {
+    "functional_location": "U200-COMP-TRAIN-01",
+    "equipment_number": "200-P-114A"
+  },
+  "short_text": "LO Pump A low pressure + abnormal noise; standby required",
+  "description": "Intermittent low lube oil pressure alarms on C-201 with LO Pump A running. Grinding noise from pump. Started ~08:40. Local LO pressure fluctuated 220–310 kPa (normal ~350). Switched to LO Pump B at 09:05; pressure stabilized ~355 kPa and noise ceased. No external leaks observed."
+}

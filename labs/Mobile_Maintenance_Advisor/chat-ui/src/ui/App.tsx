@@ -1,4 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import type { AudioAttachment, ChatMessage, UiSettings } from "./types";
 import { sendChat } from "./api";
 import { fileToBase64, formatBytes, uid } from "./utils";
@@ -398,7 +400,11 @@ export default function App() {
                 <div key={m.id} className={`msg ${m.role}`}>
                   <div className="avatar">{m.role === "user" ? "You" : "AI"}</div>
                   <div className="bubble">
-                    {m.content && <div>{m.content}</div>}
+                    {m.content && (
+                      <ReactMarkdown className="md" remarkPlugins={[remarkGfm]}>
+                        {m.content}
+                      </ReactMarkdown>
+                    )}
                     {m.audio && (
                       <div className="attachment">
                         <div className="attachment-title">Audio attachment</div>
@@ -447,12 +453,12 @@ export default function App() {
                     {isRecording ? "Stop recording" : "Record audio"}
                   </button>
                   <button
-                    className="ghost"
+                    className="upload-btn"
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={busy || isRecording}
                   >
-                    Attach audio
+                    Upload Audio
                   </button>
                   {audioFile && (
                     <button
