@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import AsyncGenerator
 
 import mlflow
@@ -101,6 +102,30 @@ def _normalize_input_messages(messages: list[dict]) -> list[dict]:
         out.append({**msg, "role": role, "content": parts})
 
     return out
+
+
+def _load_notification_templates() -> str:
+    templates_dir = Path(__file__).resolve().parents[1] / "templates"
+    templates = [
+        ("notification_minimal.json (required fields)", templates_dir / "notification_minimal.json"),
+        ("notification_template.json (all fields example)", templates_dir / "notification_template.json"),
+    ]
+    sections: list[str] = []
+    for label, path in templates:
+        try:
+            if path.exists():
+                content = path.read_text(encoding="utf-8").strip()
+                if content:
+                    sections.append(f"{label}:\n{content}")
+        except OSError:
+            continue
+    if not sections:
+        return ""
+    return (
+        "Reference SAP notification JSON examples (use these to confirm required fields and ask "
+        "clarifying questions when details are missing or ambiguous):\n"
+        + "\n\n".join(sections)
+    )
 # NOTE: this will work for all databricks models OTHER than GPT-OSS, which uses a slightly different API
 set_default_openai_client(AsyncDatabricksOpenAI())
 set_default_openai_api("chat_completions")
@@ -116,13 +141,18 @@ async def init_mcp_server():
 
 
 def create_coding_agent(mcp_server: McpServer) -> Agent:
+    notification_templates = _load_notification_templates()
     return Agent(
         name="code execution agent",
         instructions=(
-            "You are a code execution agent. You can execute code and return the results. "
-            "When a user asks to test connectivity, call the connectivity_check tool. "
-            "When a user asks to transcribe audio, call transcribe_audio with the audio "
-            "data and format from the latest input_audio part."
+            """
+            You are a helpful maintenance advisor. You can help listen to user scenarios and provide guidance. As the maintenance advisor, your primary task is to get all required information and provide actionable steps to resolve issues. When a user asks for advice, provide clear and concise recommendations. When testing connectivity, use the connectivity_check tool to ensure proper network access. When transcribing audio, use the transcribe_audio tool to convert audio to text for analysis.
+            
+            Your primary task is to collect all required information from the user and create a notification formatted and submitted to either SAP or Cognite. Once all required information is obtained from the user your task is to validate that the fields are correct with the user and if they are correct to submit the notification to SAP using the create_sap_notification tool, and return the SAP Notification ID to the user. You can also ask the user if they would like a summary of the chat session emailed to them.
+            
+            Your secondary task is to assist the user with any questions they have pertaining to plant or field operations. As a maintenance advisor, you will provide guidance and recommendations based on the user's input and available data.
+            """
+            + ("\n\n" + notification_templates if notification_templates else "")
         ),
         model="databricks-gpt-5-2",
         mcp_servers=[mcp_server],
