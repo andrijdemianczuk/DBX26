@@ -50,6 +50,7 @@ def transcribe_audio(audio_b64: str, audio_format: str) -> str:
 @function_tool
 def create_sap_notification(sap_notification: str) -> str:
     notification_json = sap_notification
+    '''Insert code to create SAP Notification here'''
     sap_notification_id = "XYZ987"
     return sap_notification_id
 
