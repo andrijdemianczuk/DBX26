@@ -47,9 +47,16 @@ def transcribe_audio(audio_b64: str, audio_format: str) -> str:
     """Transcribe base64-encoded audio using gpt-4o-transcribe."""
     return _transcribe_audio_impl(audio_b64, audio_format)
 
+@function_tool
+def create_sap_notification(sap_notification: str) -> str:
+    notification_json = sap_notification
+    sap_notification_id = "XYZ987"
+    return sap_notification_id
+
 
 TOOL_REGISTRY = [
     connectivity_check,
     echo,
     transcribe_audio,
+    create_sap_notification,
 ]
