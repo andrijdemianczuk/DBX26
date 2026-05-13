@@ -1192,8 +1192,6 @@ displayHTML("""
 # MAGIC %md
 # MAGIC # Section 4 — The Magic: Auto-Enforcement
 # MAGIC
-# MAGIC **~25 min · mostly live demo**
-# MAGIC
 # MAGIC Everything we've built so far — the tag vocabulary, the mask UDFs, the catalog-scope attachment — has been *setup*. This section is the payoff.
 # MAGIC
 # MAGIC We're going to pretend a brand-new table just landed from PFG's Exadata migration. There is no policy for it. Nobody has wired up a mask. Just a new table, two tags, and a query — and we'll watch what happens.
@@ -1298,16 +1296,16 @@ displayHTML("""
 # MAGIC --   2. Function names MUST be fully qualified — the policy resolver
 # MAGIC --      looks them up under `<catalog>.default` otherwise and fails.
 # MAGIC CREATE OR REPLACE POLICY mask_ssn_policy
-# MAGIC ON CATALOG ademianczuk_uc_1_catalog
+# MAGIC ON CATALOG IDENTIFIER(:catalog)
 # MAGIC COMMENT 'Apply mask_ssn to columns tagged pii = ssn'
-# MAGIC COLUMN MASK ademianczuk_uc_1_catalog.pfg_abac_demo.mask_ssn
+# MAGIC COLUMN MASK mask_ssn
 # MAGIC TO `account users`
 # MAGIC FOR TABLES MATCH COLUMNS has_tag_value('pii', 'ssn') AS ssn_col ON COLUMN ssn_col;
 # MAGIC
 # MAGIC CREATE OR REPLACE POLICY mask_address_policy
-# MAGIC ON CATALOG ademianczuk_uc_1_catalog
+# MAGIC ON CATALOG IDENTIFIER(:catalog)
 # MAGIC COMMENT 'Apply mask_address to columns tagged pii = address'
-# MAGIC COLUMN MASK ademianczuk_uc_1_catalog.pfg_abac_demo.mask_address
+# MAGIC COLUMN MASK mask_address
 # MAGIC TO `account users`
 # MAGIC FOR TABLES MATCH COLUMNS has_tag_value('pii', 'address') AS addr_col ON COLUMN addr_col;
 
@@ -1315,7 +1313,7 @@ displayHTML("""
 
 # MAGIC %sql
 # MAGIC -- Confirm both policies are attached
-# MAGIC SHOW POLICIES ON CATALOG ademianczuk_uc_1_catalog;
+# MAGIC SHOW POLICIES ON CATALOG IDENTIFIER(:catalog);
 
 # COMMAND ----------
 
@@ -1419,7 +1417,7 @@ displayHTML("""
 # MAGIC %md
 # MAGIC ## The PFG connection — governance that scales with the migration
 # MAGIC
-# MAGIC Chris Allen has a backlog of Exadata workloads queued up for migration. In a per-table-policy world, every one of those migrations is also a governance project — author the masks, attach them, re-test, document, hand off. The governance work becomes the bottleneck on the migration itself.
+# MAGIC There is a big backlog of Exadata workloads queued up for migration. In a per-table-policy world, every one of those migrations is also a governance project — author the masks, attach them, re-test, document, hand off. The governance work becomes the bottleneck on the migration itself.
 # MAGIC
 # MAGIC In the world we just demonstrated:
 # MAGIC
@@ -1448,7 +1446,7 @@ displayHTML("""
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Recap — what we showed in 25 minutes
+# MAGIC ## Recap
 # MAGIC
 # MAGIC - **A brand-new table** landed (`new_customer_data` — pretend Exadata)
 # MAGIC - **No policy authoring** happened
@@ -1475,8 +1473,6 @@ displayHTML("""
 
 # MAGIC %md
 # MAGIC # Section 5 — Power BI Security
-# MAGIC
-# MAGIC **~20 min · slides + conversation**
 # MAGIC
 # MAGIC Everything we just demonstrated — row filters, column masks, catalog-scope policies — runs **server-side at Databricks**. That has a direct payoff for the BI tools sitting on top of UC, Power BI included. This section walks through what that means for Negin's PBI Centre of Excellence.
 
@@ -1648,27 +1644,23 @@ displayHTML("""
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## What this means for Negin's PBI CoE
+# MAGIC ## What this means for the PBI CoE
 # MAGIC
 # MAGIC Two shifts worth surfacing explicitly:
 # MAGIC
 # MAGIC - **No more parallel RLS implementation in PBI.** RLS roles defined in Power BI semantic models, DAX security filter expressions, per-workspace security tables — none of that needs to exist when the row filter already lives in UC. The semantic model gets to be about *semantics*, not security.
 # MAGIC - **One audit story.** *"Why did this user see that row?"* has one answer, not two — and that answer lives in UC's audit logs, not split between PBI and the data layer.
 # MAGIC
-# MAGIC > **Negin's team writes zero PBI RLS for any table whose row filter is already enforced in UC.**
+# MAGIC > **The PBI team no longer needs to author PBI RLS rules for any table whose row filter is already enforced in UC.**
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Discussion — questions to surface in the room
-# MAGIC
-# MAGIC Three to draw the conversation out:
+# MAGIC ## Discussion
 # MAGIC
 # MAGIC 1. **How are you currently handling RLS in Power BI? Are you maintaining separate security logic per semantic model?**
 # MAGIC 2. **When a new dataset gets published to PBI, what's the process today to get it secured? Who owns it, how long does it take?**
 # MAGIC 3. **What would it feel like if all of that was handled once, at the data layer, before PBI ever touches it?**
-# MAGIC
-# MAGIC The goal isn't to convince — it's to make the duplication visible. If Negin's team is already maintaining shadow RLS in PBI semantic models on top of the access controls that already live in the warehouse, the math is going to tell itself.
 
 # COMMAND ----------
 
@@ -1726,17 +1718,15 @@ displayHTML("""
 # MAGIC | Team | What they own | What they stop maintaining |
 # MAGIC |---|---|---|
 # MAGIC | **Data governance team** | Tag policies, mask/filter UDFs, catalog-scope attachments | Per-table grants, per-banner views, role-explosion paperwork |
-# MAGIC | **Negin's PBI CoE** | Semantic models, dashboards, distribution | Shadow RLS in PBI, parallel security tables, dual audit story |
-# MAGIC | **Chris Allen's migration team** | Landing Exadata tables into UC with the right tags | Governance backlog blocking each table landing |
-# MAGIC
-# MAGIC Three workstreams, one source of truth. That's the shape worth installing.
+# MAGIC | **PBI CoE** | Semantic models, dashboards, distribution | Shadow RLS in PBI, parallel security tables, dual audit story |
+# MAGIC | **Migration team** | Landing Exadata tables into UC with the right tags | Governance backlog blocking each table landing |
 
 # COMMAND ----------
 
 # MAGIC %md
 # MAGIC ## The PFG bet
 # MAGIC
-# MAGIC Chris Allen's Exadata workloads are landing in UC table by table. In a per-table-policy world, every one of those landings is its own governance project — author the masks, mint the roles, write the views, document the access patterns, hand off. **Governance becomes the schedule constraint on the migration itself.**
+# MAGIC In a per-table-policy world, every one of those landings is its own governance project — author the masks, mint the roles, write the views, document the access patterns, hand off. **Governance becomes the schedule constraint on the migration itself.**
 # MAGIC
 # MAGIC In the world we just demonstrated:
 # MAGIC
@@ -1753,20 +1743,7 @@ displayHTML("""
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Three things to do Monday
-# MAGIC
-# MAGIC Three concrete moves to convert today's demo into next week's progress:
-# MAGIC
-# MAGIC 1. **Stand up the tag vocabulary.** Pick three to five governed keys — `sensitivity`, `data_owner`, `business_unit`, `banner` is a strong starting set — and create the tag policies in Catalog Explorer. Even an ungoverned tag key is a wedge you can lock down later.
-# MAGIC 2. **Write the first two UDFs at catalog scope.** Pick the two most common masking patterns at PFG today (start with what auto-classification flags most often) and stand them up. Use this notebook's `mask_ssn` and `mask_address` as templates. Validate end-to-end with one tagged column on one table.
-# MAGIC 3. **Pick one real Exadata table to land governed.** Choose a table from Chris Allen's queue — not a demo table — land it in UC with the right tags, and watch the catalog-scope policies fire. One end-to-end proof is worth more than any design doc.
-# MAGIC
-# MAGIC None of these require new tooling, new vendors, or org changes. They're a focused week.
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ## The closing thought
+# MAGIC ## Final Thoughts
 # MAGIC
 # MAGIC Most security models fail at scale because the people maintaining them can't keep up with the org's complexity. ABAC works at PFG's scale because **it doesn't ask them to.**
 # MAGIC
