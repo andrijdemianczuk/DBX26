@@ -2,8 +2,6 @@
 # MAGIC %md
 # MAGIC # ABAC Fundamentals
 # MAGIC
-# MAGIC **Customer:** Pattison Food Group (PFG)
-# MAGIC
 # MAGIC Attribute-Based Access Control (ABAC) primer on Databricks Unity Catalog —
 # MAGIC row filters, column masks, and policy tags driven by user/group attributes.
 
@@ -586,7 +584,7 @@ displayHTML("""
 
   <rect class="box-soft" x="650" y="65" width="260" height="100" rx="6"/>
   <text x="780" y="90" class="stream-title-manual" text-anchor="middle">MANUAL</text>
-  <text x="780" y="108" class="stream-sub" text-anchor="middle">Domain teams (Sim's CoE)</text>
+  <text x="780" y="108" class="stream-sub" text-anchor="middle">Domain teams (CoE)</text>
   <text x="780" y="135" class="tag-mono" text-anchor="middle">banner, data_owner</text>
   <text x="780" y="151" class="tag-mono" text-anchor="middle">sensitivity, business_unit</text>
 
@@ -611,22 +609,22 @@ displayHTML("""
 # MAGIC %md
 # MAGIC ## What this looks like for PFG
 # MAGIC
-# MAGIC As your Exadata wage data, POS transactions, and customer loyalty data land in Unity Catalog, the classification agent catches the sensitive columns automatically — **no manual tagging effort for Sim's team.**
+# MAGIC As your Exadata wage data, POS transactions, and customer loyalty data land in Unity Catalog, the classification agent catches the sensitive columns automatically — **no manual tagging effort**
 # MAGIC
 # MAGIC Day-zero: emails, phone numbers, payroll amounts, loyalty card IDs get tagged as PII without anyone filing a ticket.
 # MAGIC
-# MAGIC Day-one onward: Sim's team layers on the *domain* tags — which banner, which data owner, which sensitivity tier — that govern who can see what. Those are the tags the row filters and column masks we'll write in the next section will read.
+# MAGIC Day-one onward: The domain owners layer on the *domain* tags — which banner, which data owner, which sensitivity tier — that govern who can see what. Those are the tags the row filters and column masks we'll write in the next section will read.
 
 # COMMAND ----------
 
 # MAGIC %md
 # MAGIC ## Live demo — tagging a PFG transactions table
 # MAGIC
-# MAGIC We'll:
+# MAGIC In this demo we will:
 # MAGIC
 # MAGIC 1. Spin up a PFG-shaped transactions table in a sandbox schema
 # MAGIC 2. Show what auto-classification **would** apply (simulating it inline, since the agent runs on a 24h cadence)
-# MAGIC 3. Layer on the custom governed tags Sim's team would maintain
+# MAGIC 3. Layer on the custom governed tags
 # MAGIC 4. Query `information_schema` to see the full tagging state
 
 # COMMAND ----------
@@ -734,7 +732,6 @@ dbutils.widgets.text("schema",  "pfg_abac_demo", "Schema")
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC -- Table-level governance tags that Sim's team would maintain.
 # MAGIC -- Note: this workspace has a tag policy on `sensitivity` enforcing the
 # MAGIC -- vocabulary [pii, internal, public] — exactly the kind of guardrail
 # MAGIC -- you want once tags drive access policy.
@@ -781,8 +778,6 @@ dbutils.widgets.text("schema",  "pfg_abac_demo", "Schema")
 # MAGIC %md
 # MAGIC ## Bonus — setting up your own tag policies
 # MAGIC
-# MAGIC The rejection errors we saw on `sensitivity = 'confidential'` and `business_unit = 'retail_ops'` weren't bugs — they were **tag policies** doing their job. Worth a deeper look, because this is where tag hygiene becomes *enforceable* rather than aspirational.
-# MAGIC
 # MAGIC ### What is a tag policy?
 # MAGIC
 # MAGIC A tag policy is a metastore-level governance artifact that locks down which **values** are allowed for a given tag **key**. Without one, anyone with tag-write permission can apply any value. With one, UC rejects out-of-vocabulary values at the `ALTER TABLE` boundary — *before* the bad tag ever reaches a row filter.
@@ -798,7 +793,7 @@ dbutils.widgets.text("schema",  "pfg_abac_demo", "Schema")
 # MAGIC - **UI** — Catalog Explorer → *Governance* → *Tag Policies*. Easiest path; this is where the `sensitivity` and `business_unit` policies you hit live were created.
 # MAGIC - **REST API** — `/api/2.1/unity-catalog/tag-policies` for programmatic setup and IaC (Terraform via the Databricks provider).
 # MAGIC
-# MAGIC A stable SQL DDL (`CREATE TAG POLICY`) for this is on the roadmap but isn't reliably available as of writing — check current docs before scripting. For Sim's team, the practical path today is: pilot vocabulary in the UI, then once stable, lift the same definitions into Terraform.
+# MAGIC A stable SQL DDL (`CREATE TAG POLICY`) for this is on the roadmap but isn't reliably available as of writing — check current docs before scripting. The practical path today is: pilot vocabulary in the UI, then once stable, lift the same definitions into Terraform.
 # MAGIC
 # MAGIC ### A pragmatic rollout for PFG
 # MAGIC
@@ -887,7 +882,7 @@ dbutils.widgets.text("schema",  "pfg_abac_demo", "Schema")
 # MAGIC %md
 # MAGIC **Note on tag-policy creation:**
 # MAGIC
-# MAGIC In current Databricks releases, tag policies are managed via the **Catalog Explorer UI** (*Governance → Tag Policies*) or the **REST API** — there isn't yet a stable SQL DDL surface for `CREATE TAG POLICY`. We're skipping the create step here for that reason; the rest of the demo works regardless (an ungoverned tag key just accepts any value).
+# MAGIC In current Databricks releases, tag policies are managed via the **Catalog Explorer UI** (*Governance → Tag Policies*) or the **REST API** — there isn't yet a stable SQL DDL surface for `CREATE TAG POLICY`. We're skipping the create step here for that reason; the rest of the demo works regardless (an ungoverned tag key just accepts any value). We will be setting up a catalog-level policy later.
 # MAGIC
 # MAGIC If you want to set up the `pii` vocabulary in this workspace before the audience arrives, do it once in the UI — same pattern you saw on the pre-existing `sensitivity` / `business_unit` policies in Section 2.
 
@@ -899,6 +894,7 @@ dbutils.widgets.text("schema",  "pfg_abac_demo", "Schema")
 # COMMAND ----------
 
 # MAGIC %sql
+# MAGIC DROP TABLE IF EXISTS employees;
 # MAGIC CREATE OR REPLACE TABLE employees (
 # MAGIC   employee_id   STRING,
 # MAGIC   full_name     STRING,
@@ -1113,6 +1109,7 @@ displayHTML("""
 
 # MAGIC %sql
 # MAGIC -- Brand-new payroll table — never touched our masks before
+# MAGIC DROP TABLE IF EXISTS payroll_runs;
 # MAGIC CREATE OR REPLACE TABLE payroll_runs (
 # MAGIC   run_id       BIGINT,
 # MAGIC   employee_id  STRING,
@@ -1153,7 +1150,7 @@ displayHTML("""
 # MAGIC
 # MAGIC In a workspace where the column-mask policy is attached at **catalog** scope (via the Catalog Explorer UI or REST API), Step 7 collapses to just the *tag* — the `ALTER TABLE ... SET MASK` disappears entirely, because the catalog-level policy says *"any column with tag `pii = ssn`, anywhere in this catalog, gets `mask_ssn`."*
 # MAGIC
-# MAGIC That's the operational payoff: **Sim's team writes the UDF once, attaches the policy once, and every future PFG table inherits the mask the moment a column is tagged.** No per-table SQL, no governance backlog when new tables land.
+# MAGIC That's the operational payoff: **The UDF is written once, attaches the policy once, and every future PFG table inherits the mask the moment a column is tagged.** No per-table SQL, no governance backlog when new tables land.
 
 # COMMAND ----------
 
@@ -1181,7 +1178,7 @@ displayHTML("""
 # MAGIC %md
 # MAGIC ## Recap
 # MAGIC
-# MAGIC In ten minutes we went from raw tags to enforced ABAC:
+# MAGIC In a short period of time, we went from raw tags to enforced ABAC:
 # MAGIC
 # MAGIC - **Two policy types** — row filter and column mask — both are just SQL UDFs
 # MAGIC - **Anatomy** — scope + match condition + caller condition + transformation
@@ -1199,7 +1196,7 @@ displayHTML("""
 # MAGIC
 # MAGIC Everything we've built so far — the tag vocabulary, the mask UDFs, the catalog-scope attachment — has been *setup*. This section is the payoff.
 # MAGIC
-# MAGIC We're going to pretend a brand-new table just landed from PFG's Exadata migration. Sim's team hasn't authored a policy for it. Nobody has wired up a mask. Just a new table, two tags, and a query — and we'll watch what happens.
+# MAGIC We're going to pretend a brand-new table just landed from PFG's Exadata migration. There is no policy for it. Nobody has wired up a mask. Just a new table, two tags, and a query — and we'll watch what happens.
 
 # COMMAND ----------
 
@@ -1276,7 +1273,7 @@ displayHTML("""
   <text x="890" y="170" class="mono-white" text-anchor="middle">XXX-XX-1234</text>
 
   <text x="490" y="265" class="caption-bottom" text-anchor="middle">ZERO ADDITIONAL GOVERNANCE WORK</text>
-  <text x="490" y="290" class="caption-sub" text-anchor="middle">Sim's team writes the UDF once; every future tagged column inherits the mask</text>
+  <text x="490" y="290" class="caption-sub" text-anchor="middle">Admin team writes the UDF once; every future tagged column inherits the mask</text>
 </svg>
 """)
 
@@ -1329,7 +1326,6 @@ displayHTML("""
 
 # MAGIC %sql
 # MAGIC -- Pretend this table just landed from PFG's Exadata migration.
-# MAGIC -- Sim's team hasn't authored a policy for it.  They haven't touched it at all.
 # MAGIC --
 # MAGIC -- Note the explicit DROP: in UC, `CREATE OR REPLACE TABLE` preserves the
 # MAGIC -- table's object identity, which means column tags survive the replace.
@@ -1361,7 +1357,6 @@ displayHTML("""
 # MAGIC %sql
 # MAGIC -- Right now the table is wide open.  No tags, no masks.  Anyone with SELECT
 # MAGIC -- on this table sees raw SSN and address — exactly the kind of leakage
-# MAGIC -- Sim's team needs to prevent at migration scale.
 # MAGIC SELECT * FROM new_customer_data;
 
 # COMMAND ----------
@@ -1428,7 +1423,7 @@ displayHTML("""
 # MAGIC
 # MAGIC In the world we just demonstrated:
 # MAGIC
-# MAGIC - The mask UDFs (`mask_ssn`, `mask_address`, future ones) are written **once** by Sim's team
+# MAGIC - The mask UDFs (`mask_ssn`, `mask_address`, future ones) are written **once**
 # MAGIC - The catalog-scope attachment is set up **once** in Catalog Explorer
 # MAGIC - Auto-classification handles the *what kind of data is this* tagging without human effort
 # MAGIC - Domain teams own the *banner / owner / sensitivity* tagging for the tables they land
@@ -1730,7 +1725,7 @@ displayHTML("""
 # MAGIC
 # MAGIC | Team | What they own | What they stop maintaining |
 # MAGIC |---|---|---|
-# MAGIC | **Sim's data governance team** | Tag policies, mask/filter UDFs, catalog-scope attachments | Per-table grants, per-banner views, role-explosion paperwork |
+# MAGIC | **Data governance team** | Tag policies, mask/filter UDFs, catalog-scope attachments | Per-table grants, per-banner views, role-explosion paperwork |
 # MAGIC | **Negin's PBI CoE** | Semantic models, dashboards, distribution | Shadow RLS in PBI, parallel security tables, dual audit story |
 # MAGIC | **Chris Allen's migration team** | Landing Exadata tables into UC with the right tags | Governance backlog blocking each table landing |
 # MAGIC
