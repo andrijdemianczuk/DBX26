@@ -1,0 +1,2883 @@
+{
+  "datasets": [
+    {
+      "name": "wip_report",
+      "displayName": "WIP Report",
+      "config": {
+        "source": "ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report",
+        "measures": [
+          {
+            "displayName": "Total Contract Value",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "total_contract_value",
+            "expr": "SUM(contract_value_cad)",
+            "comment": "Total contract value across all projects (CAD)"
+          },
+          {
+            "displayName": "Total Revised Contract",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "total_revised_contract",
+            "expr": "SUM(revised_contract_price_cad)",
+            "comment": "Total revised contract price (CAD)"
+          },
+          {
+            "displayName": "Total Forecast Margin",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "total_forecast_margin",
+            "expr": "SUM(forecast_final_margin_cad)",
+            "comment": "Total forecast final margin (CAD)"
+          },
+          {
+            "displayName": "Avg CPI",
+            "format": {
+              "type": "number",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 3.0
+              }
+            },
+            "name": "avg_cpi",
+            "expr": "AVG(cpi)",
+            "comment": "Average Cost Performance Index across projects"
+          },
+          {
+            "displayName": "Total Overdue AR",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "total_overdue_ar",
+            "expr": "SUM(total_overdue_ar_cad)",
+            "comment": "Total overdue accounts receivable (CAD)"
+          },
+          {
+            "displayName": "Total Cash Position",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "total_cash_position",
+            "expr": "SUM(cash_position_cad)",
+            "comment": "Net cash position across all projects (CAD)"
+          },
+          {
+            "displayName": "Total Earned Revenue",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "total_earned_revenue",
+            "expr": "SUM(earned_revenue_cad)",
+            "comment": "Total earned revenue to date (CAD)"
+          },
+          {
+            "displayName": "Total Cost to Date",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "total_cost_to_date",
+            "expr": "SUM(total_cost_to_date_cad)",
+            "comment": "Total project costs incurred to date (CAD)"
+          },
+          {
+            "displayName": "Total Billings",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "total_billings",
+            "expr": "SUM(billings_to_date_cad)",
+            "comment": "Total invoiced to clients to date (CAD)"
+          },
+          {
+            "displayName": "Total Open Risks",
+            "format": {
+              "type": "number",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              }
+            },
+            "name": "total_open_risks",
+            "expr": "SUM(open_risk_count)",
+            "comment": "Total number of open risks"
+          },
+          {
+            "displayName": "Total Critical Risks",
+            "format": {
+              "type": "number",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              }
+            },
+            "name": "total_critical_risks",
+            "expr": "SUM(critical_risk_count)",
+            "comment": "Total number of critical-severity risks"
+          },
+          {
+            "displayName": "Project Count",
+            "format": {
+              "type": "number",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              }
+            },
+            "name": "project_count",
+            "expr": "COUNT(DISTINCT project_id)",
+            "comment": "Number of projects"
+          },
+          {
+            "displayName": "Avg % Complete",
+            "format": {
+              "type": "number",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 1.0
+              }
+            },
+            "name": "avg_pct_complete",
+            "expr": "AVG(total_pct_complete)",
+            "comment": "Average percent complete across projects"
+          },
+          {
+            "displayName": "Total Margin Fade",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "total_margin_fade",
+            "expr": "SUM(margin_fade_cad)",
+            "comment": "Total margin fade this period (CAD)"
+          },
+          {
+            "displayName": "Total Risk Impact",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "total_risk_impact",
+            "expr": "SUM(open_risk_impact_cad)",
+            "comment": "Total estimated impact from open risks (CAD)"
+          },
+          {
+            "displayName": "Total Cash Received",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "total_cash_received",
+            "expr": "SUM(total_cash_received_cad)",
+            "comment": "Total cash received from clients (CAD)"
+          },
+          {
+            "displayName": "Total Cash Paid",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "total_cash_paid",
+            "expr": "SUM(total_cash_paid_cad)",
+            "comment": "Total cash paid to subcontractors and suppliers (CAD)"
+          },
+          {
+            "displayName": "Current (Not Overdue)",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "current_not_overdue",
+            "expr": "SUM(current_not_overdue_cad)",
+            "comment": "Open AR within payment terms (CAD)"
+          },
+          {
+            "displayName": "1-30 Days Overdue",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "overdue_1_30",
+            "expr": "SUM(overdue_1_30_cad)",
+            "comment": "AR 1-30 days past due (CAD)"
+          },
+          {
+            "displayName": "31-60 Days Overdue",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "overdue_31_60",
+            "expr": "SUM(overdue_31_60_cad)",
+            "comment": "AR 31-60 days past due (CAD)"
+          },
+          {
+            "displayName": "61-90 Days Overdue",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "overdue_61_90",
+            "expr": "SUM(overdue_61_90_cad)",
+            "comment": "AR 61-90 days past due (CAD)"
+          },
+          {
+            "displayName": "91+ Days Overdue",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "overdue_91_plus",
+            "expr": "SUM(overdue_91_plus_cad)",
+            "comment": "AR 91+ days past due (CAD). High collection risk."
+          },
+          {
+            "displayName": "Client Holdback",
+            "format": {
+              "type": "currency",
+              "currencyCode": "CAD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 0.0
+              },
+              "abbreviation": "compact"
+            },
+            "name": "client_holdback",
+            "expr": "SUM(client_holdback_cad)",
+            "comment": "Lien holdback withheld by client (CAD)"
+          }
+        ],
+        "version": "1.1",
+        "comment": "Construction projects Work-in-Progress financial summary",
+        "dimensions": [
+          {
+            "name": "project_id",
+            "expr": "project_id",
+            "comment": "Project identifier (PRJ-NNN)"
+          },
+          {
+            "name": "project_name",
+            "expr": "project_name",
+            "comment": "Human-readable project name"
+          },
+          {
+            "name": "division",
+            "expr": "division",
+            "comment": "Ledcor business division"
+          },
+          {
+            "name": "owner",
+            "expr": "owner",
+            "comment": "Project owner / client"
+          },
+          {
+            "name": "project_status",
+            "expr": "project_status",
+            "comment": "Current project lifecycle status: Planning, Active, On Hold, Closing Out, Complete"
+          },
+          {
+            "name": "project_manager",
+            "expr": "project_manager",
+            "comment": "Ledcor project manager"
+          },
+          {
+            "name": "start_date",
+            "expr": "start_date",
+            "comment": "Project start date",
+            "format": {
+              "type": "date",
+              "dateFormat": "year_month_day"
+            }
+          },
+          {
+            "name": "planned_end_date",
+            "expr": "planned_end_date",
+            "comment": "Planned project completion date",
+            "format": {
+              "type": "date",
+              "dateFormat": "year_month_day"
+            }
+          },
+          {
+            "displayName": "Month End Date",
+            "format": {
+              "type": "date",
+              "dateFormat": "year_month_day"
+            },
+            "synonyms": [
+              "reporting cutoff date",
+              "month end"
+            ],
+            "name": "month_end_date",
+            "expr": "source.month_end_date",
+            "comment": "Most recent month-end reporting cutoff date"
+          },
+          {
+            "name": "ineight_project_id",
+            "expr": "projects.ineight_project_id",
+            "comment": "Project ID in the InEight cost-management system",
+            "displayName": "InEight Project ID"
+          },
+          {
+            "name": "jde_job_number",
+            "expr": "projects.jde_job_number",
+            "comment": "Job number in JD Edwards (JDE) ERP system",
+            "displayName": "JDE Job Number"
+          }
+        ],
+        "joins": [
+          {
+            "name": "projects",
+            "source": "ademianczuk_uc_1_catalog.ledcor_synthetic.projects",
+            "on": "source.project_id = projects.project_id"
+          }
+        ]
+      }
+    },
+    {
+      "name": "contract_summary",
+      "displayName": "Contract Summary",
+      "queryLines": [
+        "SELECT\n",
+        "  field_label,\n",
+        "  field_value,\n",
+        "  field_pct,\n",
+        "  sort_order\n",
+        "FROM\n",
+        "  (\n",
+        "    SELECT\n",
+        "      'Original Contract Price' as field_label,\n",
+        "      original_contract_price_cad as field_value,\n",
+        "      '' as field_pct,\n",
+        "      1 as sort_order\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Approved Change Revenue',\n",
+        "      approved_change_revenue_cad,\n",
+        "      '',\n",
+        "      2\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Pending Change Revenue (contributing)',\n",
+        "      revised_contract_price_cad - original_contract_price_cad - approved_change_revenue_cad,\n",
+        "      '',\n",
+        "      3\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Revised Contract Price',\n",
+        "      revised_contract_price_cad,\n",
+        "      CONCAT(FORMAT_NUMBER(100.0, '##0.00'), '%'),\n",
+        "      4\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Original Contract Margin',\n",
+        "      original_contract_margin_cad,\n",
+        "      CONCAT(\n",
+        "        FORMAT_NUMBER(original_contract_margin_cad / original_contract_price_cad * 100, '##0.00'),\n",
+        "        '%'\n",
+        "      ),\n",
+        "      5\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Revised Contract Margin',\n",
+        "      revised_contract_margin_cad,\n",
+        "      CONCAT(\n",
+        "        FORMAT_NUMBER(revised_contract_margin_cad / revised_contract_price_cad * 100, '##0.00'),\n",
+        "        '%'\n",
+        "      ),\n",
+        "      6\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Forecast Final Margin',\n",
+        "      forecast_final_margin_cad,\n",
+        "      CONCAT(\n",
+        "        FORMAT_NUMBER(forecast_final_margin_cad / revised_contract_price_cad * 100, '##0.00'),\n",
+        "        '%'\n",
+        "      ),\n",
+        "      7\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Last Month''s Forecast Margin',\n",
+        "      last_month_forecast_margin_cad,\n",
+        "      CONCAT(\n",
+        "        FORMAT_NUMBER(last_month_forecast_margin_cad / revised_contract_price_cad * 100, '##0.00'),\n",
+        "        '%'\n",
+        "      ),\n",
+        "      8\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Earned Revenue',\n",
+        "      earned_revenue_cad,\n",
+        "      CONCAT(FORMAT_NUMBER(earned_revenue_cad / revised_contract_price_cad * 100, '##0.00'), '%'),\n",
+        "      9\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "  ) t\n",
+        "ORDER BY\n",
+        "  sort_order"
+      ],
+      "parameters": [
+        {
+          "displayName": "Project Name",
+          "keyword": "project_name",
+          "dataType": "STRING",
+          "defaultSelection": {
+            "values": {
+              "dataType": "STRING",
+              "values": [
+                {
+                  "value": "Capital Line South LRT"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "pending_changes",
+      "displayName": "Pending Changes",
+      "queryLines": [
+        "SELECT\n",
+        "  field_label,\n",
+        "  field_value,\n",
+        "  sort_order\n",
+        "FROM\n",
+        "  (\n",
+        "    SELECT\n",
+        "      'Pending Change Revenue' as field_label,\n",
+        "      pending_change_revenue_cad as field_value,\n",
+        "      1 as sort_order\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Probable Change Revenue',\n",
+        "      probable_change_revenue_cad,\n",
+        "      2\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Probable Contract Amount',\n",
+        "      probable_contract_amount_cad,\n",
+        "      3\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Probable Contract Margin',\n",
+        "      probable_contract_margin_cad,\n",
+        "      4\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "  ) t\n",
+        "ORDER BY\n",
+        "  sort_order"
+      ],
+      "parameters": [
+        {
+          "displayName": "Project Name",
+          "keyword": "project_name",
+          "dataType": "STRING",
+          "defaultSelection": {
+            "values": {
+              "dataType": "STRING",
+              "values": [
+                {
+                  "value": "Capital Line South LRT"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "cash_position",
+      "displayName": "Cash Position",
+      "queryLines": [
+        "SELECT\n",
+        "  field_label,\n",
+        "  field_value,\n",
+        "  sort_order\n",
+        "FROM\n",
+        "  (\n",
+        "    SELECT\n",
+        "      'Billings To Date' as field_label,\n",
+        "      billings_to_date_cad as field_value,\n",
+        "      1 as sort_order\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Less Uncollected AR',\n",
+        "      uncollected_ar_cad,\n",
+        "      2\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Less Client Holdback',\n",
+        "      client_holdback_cad,\n",
+        "      3\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Total Cash Received',\n",
+        "      total_cash_received_cad,\n",
+        "      4\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Total Cost To Date',\n",
+        "      total_cost_to_date_cad,\n",
+        "      5\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Less Accruals',\n",
+        "      total_cost_to_date_cad - subcontractor_holdback_cad - total_cash_paid_cad,\n",
+        "      6\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Less Subcontractor Holdback',\n",
+        "      subcontractor_holdback_cad,\n",
+        "      7\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Total Cash Paid',\n",
+        "      total_cash_paid_cad,\n",
+        "      8\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      'Cash Positive (Negative)',\n",
+        "      cash_position_cad,\n",
+        "      9\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "  ) t\n",
+        "ORDER BY\n",
+        "  sort_order"
+      ],
+      "parameters": [
+        {
+          "displayName": "Project Name",
+          "keyword": "project_name",
+          "dataType": "STRING",
+          "defaultSelection": {
+            "values": {
+              "dataType": "STRING",
+              "values": [
+                {
+                  "value": "Capital Line South LRT"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "outstanding_ar",
+      "displayName": "Outstanding AR",
+      "queryLines": [
+        "SELECT\n",
+        "  field_label,\n",
+        "  field_value,\n",
+        "  sort_order\n",
+        "FROM\n",
+        "  (\n",
+        "    SELECT\n",
+        "      'Current (not overdue)' as field_label,\n",
+        "      current_not_overdue_cad as field_value,\n",
+        "      1 as sort_order\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      '1-30 Days Overdue',\n",
+        "      overdue_1_30_cad,\n",
+        "      2\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      '31-60 Days Overdue',\n",
+        "      overdue_31_60_cad,\n",
+        "      3\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      '61-90 Days Overdue',\n",
+        "      overdue_61_90_cad,\n",
+        "      4\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "    UNION ALL\n",
+        "    SELECT\n",
+        "      '91+ Days Overdue',\n",
+        "      overdue_91_plus_cad,\n",
+        "      5\n",
+        "    FROM\n",
+        "      ademianczuk_uc_1_catalog.ledcor_synthetic.vw_wip_report\n",
+        "    WHERE\n",
+        "      project_name = :project_name\n",
+        "  ) t\n",
+        "ORDER BY\n",
+        "  sort_order"
+      ],
+      "parameters": [
+        {
+          "displayName": "Project Name",
+          "keyword": "project_name",
+          "dataType": "STRING",
+          "defaultSelection": {
+            "values": {
+              "dataType": "STRING",
+              "values": [
+                {
+                  "value": "Capital Line South LRT"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "67635c9c",
+      "displayName": "Overview",
+      "layout": [
+        {
+          "widget": {
+            "name": "counter_total_contract",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "measure(total_contract_value)",
+                      "expression": "MEASURE(`total_contract_value`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Total Contract Value"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_contract_value)",
+                  "displayName": "Total Contract Value"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_forecast_margin",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "measure(total_forecast_margin)",
+                      "expression": "MEASURE(`total_forecast_margin`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Total Forecast Margin"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_forecast_margin)",
+                  "displayName": "Total Forecast Margin"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_avg_cpi",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "measure(avg_cpi)",
+                      "expression": "MEASURE(`avg_cpi`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Average CPI"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(avg_cpi)",
+                  "displayName": "Avg CPI"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_overdue_ar",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "measure(total_overdue_ar)",
+                      "expression": "MEASURE(`total_overdue_ar`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Total Overdue AR"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_overdue_ar)",
+                  "displayName": "Total Overdue AR"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_contract_by_project",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "division",
+                      "expression": "`division`"
+                    },
+                    {
+                      "name": "measure(total_contract_value)",
+                      "expression": "MEASURE(`total_contract_value`)"
+                    },
+                    {
+                      "name": "project_name",
+                      "expression": "`project_name`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Contract Value by Project"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "measure(total_contract_value)",
+                  "displayName": "Contract Value (CAD)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "project_name",
+                  "displayName": "Project",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "color": {
+                  "fieldName": "division",
+                  "displayName": "Division",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "Civil, Mining & Infrastructure",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 5
+                        }
+                      },
+                      {
+                        "value": "Pipeline",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 7
+                        }
+                      },
+                      {
+                        "value": "Communications",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 8
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 12,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "table_project_details",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "project_name",
+                      "expression": "`project_name`"
+                    },
+                    {
+                      "name": "division",
+                      "expression": "`division`"
+                    },
+                    {
+                      "name": "project_status",
+                      "expression": "`project_status`"
+                    },
+                    {
+                      "name": "project_manager",
+                      "expression": "`project_manager`"
+                    },
+                    {
+                      "name": "measure(total_contract_value)",
+                      "expression": "MEASURE(`total_contract_value`)"
+                    },
+                    {
+                      "name": "measure(total_forecast_margin)",
+                      "expression": "MEASURE(`total_forecast_margin`)"
+                    },
+                    {
+                      "name": "measure(avg_pct_complete)",
+                      "expression": "MEASURE(`avg_pct_complete`)"
+                    },
+                    {
+                      "name": "measure(avg_cpi)",
+                      "expression": "MEASURE(`avg_cpi`)"
+                    },
+                    {
+                      "name": "measure(total_cash_position)",
+                      "expression": "MEASURE(`total_cash_position`)"
+                    },
+                    {
+                      "name": "measure(total_overdue_ar)",
+                      "expression": "MEASURE(`total_overdue_ar`)"
+                    },
+                    {
+                      "name": "measure(total_open_risks)",
+                      "expression": "MEASURE(`total_open_risks`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Project Financial Details"
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "project_name",
+                    "displayName": "Project"
+                  },
+                  {
+                    "fieldName": "division",
+                    "displayName": "Division"
+                  },
+                  {
+                    "fieldName": "project_status",
+                    "displayName": "Status"
+                  },
+                  {
+                    "fieldName": "project_manager",
+                    "displayName": "PM"
+                  },
+                  {
+                    "fieldName": "measure(total_contract_value)",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "compact"
+                    },
+                    "displayName": "Contract Value"
+                  },
+                  {
+                    "fieldName": "measure(total_forecast_margin)",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "compact"
+                    },
+                    "displayName": "Forecast Margin"
+                  },
+                  {
+                    "fieldName": "measure(avg_pct_complete)",
+                    "format": {
+                      "type": "number-plain",
+                      "abbreviation": "none",
+                      "decimalPlaces": {
+                        "type": "exact",
+                        "places": 1
+                      }
+                    },
+                    "displayName": "% Complete"
+                  },
+                  {
+                    "fieldName": "measure(avg_cpi)",
+                    "format": {
+                      "type": "number-plain",
+                      "abbreviation": "none",
+                      "decimalPlaces": {
+                        "type": "exact",
+                        "places": 3
+                      }
+                    },
+                    "displayName": "CPI"
+                  },
+                  {
+                    "fieldName": "measure(total_cash_position)",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "compact"
+                    },
+                    "displayName": "Cash Position"
+                  },
+                  {
+                    "fieldName": "measure(total_overdue_ar)",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "compact"
+                    },
+                    "displayName": "Overdue AR"
+                  },
+                  {
+                    "fieldName": "measure(total_open_risks)",
+                    "displayName": "Open Risks"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 10,
+            "width": 12,
+            "height": 7
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "risk_summary",
+      "displayName": "Risk Summary",
+      "layout": [
+        {
+          "widget": {
+            "name": "counter_open_risks",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "measure(total_open_risks)",
+                      "expression": "MEASURE(`total_open_risks`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Total Open Risks"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_open_risks)",
+                  "displayName": "Total Open Risks"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_critical_risks",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "measure(total_critical_risks)",
+                      "expression": "MEASURE(`total_critical_risks`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Critical Risks"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_critical_risks)",
+                  "displayName": "Critical Risks"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_risk_impact",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "measure(total_risk_impact)",
+                      "expression": "MEASURE(`total_risk_impact`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Total Risk Impact"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_risk_impact)",
+                  "displayName": "Total Risk Impact"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 0,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_risks_by_project",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "project_name",
+                      "expression": "`project_name`"
+                    },
+                    {
+                      "name": "measure(total_open_risks)",
+                      "expression": "MEASURE(`total_open_risks`)"
+                    },
+                    {
+                      "name": "measure(total_critical_risks)",
+                      "expression": "MEASURE(`total_critical_risks`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Open Risks by Project"
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ],
+                "layout": "group"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "project_name",
+                  "displayName": "Project",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fields": [
+                    {
+                      "fieldName": "measure(total_open_risks)",
+                      "displayName": "Open Risks"
+                    },
+                    {
+                      "fieldName": "measure(total_critical_risks)",
+                      "displayName": "Critical Risks"
+                    }
+                  ],
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_risk_impact_by_project",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "project_name",
+                      "expression": "`project_name`"
+                    },
+                    {
+                      "name": "measure(total_risk_impact)",
+                      "expression": "MEASURE(`total_risk_impact`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Risk Impact by Project"
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "project_name",
+                  "displayName": "Project",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(total_risk_impact)",
+                  "displayName": "Risk Impact (CAD)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 3,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "table_risk_details",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "project_name",
+                      "expression": "`project_name`"
+                    },
+                    {
+                      "name": "division",
+                      "expression": "`division`"
+                    },
+                    {
+                      "name": "project_status",
+                      "expression": "`project_status`"
+                    },
+                    {
+                      "name": "project_manager",
+                      "expression": "`project_manager`"
+                    },
+                    {
+                      "name": "measure(total_open_risks)",
+                      "expression": "MEASURE(`total_open_risks`)"
+                    },
+                    {
+                      "name": "measure(total_critical_risks)",
+                      "expression": "MEASURE(`total_critical_risks`)"
+                    },
+                    {
+                      "name": "measure(total_risk_impact)",
+                      "expression": "MEASURE(`total_risk_impact`)"
+                    },
+                    {
+                      "name": "measure(total_contract_value)",
+                      "expression": "MEASURE(`total_contract_value`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Project Risk Details"
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "project_name",
+                    "displayName": "Project"
+                  },
+                  {
+                    "fieldName": "division",
+                    "displayName": "Division"
+                  },
+                  {
+                    "fieldName": "project_status",
+                    "displayName": "Status"
+                  },
+                  {
+                    "fieldName": "project_manager",
+                    "displayName": "PM"
+                  },
+                  {
+                    "fieldName": "measure(total_open_risks)",
+                    "displayName": "Open Risks"
+                  },
+                  {
+                    "fieldName": "measure(total_critical_risks)",
+                    "displayName": "Critical Risks"
+                  },
+                  {
+                    "fieldName": "measure(total_risk_impact)",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "compact"
+                    },
+                    "displayName": "Risk Impact"
+                  },
+                  {
+                    "fieldName": "measure(total_contract_value)",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "compact"
+                    },
+                    "displayName": "Contract Value"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 10,
+            "width": 12,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "cash_ar",
+      "displayName": "Cash Flow & AR Aging",
+      "layout": [
+        {
+          "widget": {
+            "name": "counter_cash_position",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "measure(total_cash_position)",
+                      "expression": "MEASURE(`total_cash_position`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Net Cash Position"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_cash_position)",
+                  "displayName": "Net Cash Position"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_cash_received",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "measure(total_cash_received)",
+                      "expression": "MEASURE(`total_cash_received`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Total Cash Received"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_cash_received)",
+                  "displayName": "Cash Received"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_cash_paid",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "measure(total_cash_paid)",
+                      "expression": "MEASURE(`total_cash_paid`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Total Cash Paid"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_cash_paid)",
+                  "displayName": "Cash Paid"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_overdue_ar",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "measure(total_overdue_ar)",
+                      "expression": "MEASURE(`total_overdue_ar`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Total Overdue AR"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_overdue_ar)",
+                  "displayName": "Overdue AR"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_cash_flow",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "project_name",
+                      "expression": "`project_name`"
+                    },
+                    {
+                      "name": "measure(total_cash_received)",
+                      "expression": "MEASURE(`total_cash_received`)"
+                    },
+                    {
+                      "name": "measure(total_cash_paid)",
+                      "expression": "MEASURE(`total_cash_paid`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Cash Flow by Project"
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ],
+                "layout": "group"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "project_name",
+                  "displayName": "Project",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fields": [
+                    {
+                      "fieldName": "measure(total_cash_received)",
+                      "displayName": "Cash Received"
+                    },
+                    {
+                      "fieldName": "measure(total_cash_paid)",
+                      "displayName": "Cash Paid"
+                    }
+                  ],
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "CAD",
+                    "abbreviation": "compact"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_ar_aging",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "project_name",
+                      "expression": "`project_name`"
+                    },
+                    {
+                      "name": "measure(current_not_overdue)",
+                      "expression": "MEASURE(`current_not_overdue`)"
+                    },
+                    {
+                      "name": "measure(overdue_1_30)",
+                      "expression": "MEASURE(`overdue_1_30`)"
+                    },
+                    {
+                      "name": "measure(overdue_31_60)",
+                      "expression": "MEASURE(`overdue_31_60`)"
+                    },
+                    {
+                      "name": "measure(overdue_61_90)",
+                      "expression": "MEASURE(`overdue_61_90`)"
+                    },
+                    {
+                      "name": "measure(overdue_91_plus)",
+                      "expression": "MEASURE(`overdue_91_plus`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "AR Aging by Project"
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 1
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ],
+                "layout": "stack"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "project_name",
+                  "displayName": "Project",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fields": [
+                    {
+                      "fieldName": "measure(current_not_overdue)",
+                      "displayName": "Current"
+                    },
+                    {
+                      "fieldName": "measure(overdue_1_30)",
+                      "displayName": "1-30 Days"
+                    },
+                    {
+                      "fieldName": "measure(overdue_31_60)",
+                      "displayName": "31-60 Days"
+                    },
+                    {
+                      "fieldName": "measure(overdue_61_90)",
+                      "displayName": "61-90 Days"
+                    },
+                    {
+                      "fieldName": "measure(overdue_91_plus)",
+                      "displayName": "91+ Days"
+                    }
+                  ],
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "CAD",
+                    "abbreviation": "compact"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 3,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "table_ar_details",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "project_name",
+                      "expression": "`project_name`"
+                    },
+                    {
+                      "name": "division",
+                      "expression": "`division`"
+                    },
+                    {
+                      "name": "measure(current_not_overdue)",
+                      "expression": "MEASURE(`current_not_overdue`)"
+                    },
+                    {
+                      "name": "measure(overdue_1_30)",
+                      "expression": "MEASURE(`overdue_1_30`)"
+                    },
+                    {
+                      "name": "measure(overdue_31_60)",
+                      "expression": "MEASURE(`overdue_31_60`)"
+                    },
+                    {
+                      "name": "measure(overdue_61_90)",
+                      "expression": "MEASURE(`overdue_61_90`)"
+                    },
+                    {
+                      "name": "measure(overdue_91_plus)",
+                      "expression": "MEASURE(`overdue_91_plus`)"
+                    },
+                    {
+                      "name": "measure(total_overdue_ar)",
+                      "expression": "MEASURE(`total_overdue_ar`)"
+                    },
+                    {
+                      "name": "measure(client_holdback)",
+                      "expression": "MEASURE(`client_holdback`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "AR Aging Details"
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "project_name",
+                    "displayName": "Project"
+                  },
+                  {
+                    "fieldName": "division",
+                    "displayName": "Division"
+                  },
+                  {
+                    "fieldName": "measure(current_not_overdue)",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "compact"
+                    },
+                    "displayName": "Current"
+                  },
+                  {
+                    "fieldName": "measure(overdue_1_30)",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "compact"
+                    },
+                    "displayName": "1-30 Days"
+                  },
+                  {
+                    "fieldName": "measure(overdue_31_60)",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "compact"
+                    },
+                    "displayName": "31-60 Days"
+                  },
+                  {
+                    "fieldName": "measure(overdue_61_90)",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "compact"
+                    },
+                    "displayName": "61-90 Days"
+                  },
+                  {
+                    "fieldName": "measure(overdue_91_plus)",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "compact"
+                    },
+                    "displayName": "91+ Days"
+                  },
+                  {
+                    "fieldName": "measure(total_overdue_ar)",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "compact"
+                    },
+                    "displayName": "Total Overdue"
+                  },
+                  {
+                    "fieldName": "measure(client_holdback)",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "compact"
+                    },
+                    "displayName": "Client Holdback"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 10,
+            "width": 12,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "global_filters",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "filter_division",
+            "queries": [
+              {
+                "name": "dashboards/01f14a31b7be13ef8888abcc3a3333d8/datasets/01f14a347c921d248ecfe3b20119fab8_division",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "division",
+                      "expression": "`division`"
+                    },
+                    {
+                      "name": "division_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Division"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "division",
+                    "queryName": "dashboards/01f14a31b7be13ef8888abcc3a3333d8/datasets/01f14a347c921d248ecfe3b20119fab8_division"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 1,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "filter_status",
+            "queries": [
+              {
+                "name": "dashboards/01f14a31b7be13ef8888abcc3a3333d8/datasets/01f14a347c921d248ecfe3b20119fab8_project_status",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "project_status",
+                      "expression": "`project_status`"
+                    },
+                    {
+                      "name": "project_status_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Project Status"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "project_status",
+                    "queryName": "dashboards/01f14a31b7be13ef8888abcc3a3333d8/datasets/01f14a347c921d248ecfe3b20119fab8_project_status"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 4,
+            "width": 1,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "7006569f",
+      "displayName": "Monthly Managers Report",
+      "layout": [
+        {
+          "widget": {
+            "name": "project-name",
+            "queries": [
+              {
+                "name": "dashboards/01f14a31b7be13ef8888abcc3a3333d8/datasets/01f14a347c921d248ecfe3b20119fab8_project_name",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "project_name",
+                      "expression": "`project_name`"
+                    },
+                    {
+                      "name": "project_name_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f14a31b7be13ef8888abcc3a3333d8/datasets/01f14a4663d21eae8f761f7295249974_project_name",
+                "query": {
+                  "datasetName": "contract_summary",
+                  "parameters": [
+                    {
+                      "name": "project_name",
+                      "keyword": "project_name"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f14a31b7be13ef8888abcc3a3333d8/datasets/01f14a46dc5518fbbd5e349d7fb28ce8_project_name",
+                "query": {
+                  "datasetName": "pending_changes",
+                  "parameters": [
+                    {
+                      "name": "project_name",
+                      "keyword": "project_name"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f14a31b7be13ef8888abcc3a3333d8/datasets/01f14a474ff31d05b62a55b248bf272d_project_name",
+                "query": {
+                  "datasetName": "cash_position",
+                  "parameters": [
+                    {
+                      "name": "project_name",
+                      "keyword": "project_name"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f14a31b7be13ef8888abcc3a3333d8/datasets/01f14a47bc881e258804ec7276203b9f_project_name",
+                "query": {
+                  "datasetName": "outstanding_ar",
+                  "parameters": [
+                    {
+                      "name": "project_name",
+                      "keyword": "project_name"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "disallowAll": true,
+              "frame": {
+                "showTitle": true,
+                "title": "Project Name"
+              },
+              "version": 2,
+              "selection": {
+                "defaultSelection": {
+                  "values": {
+                    "dataType": "STRING",
+                    "values": [
+                      {
+                        "value": "Capital Line South LRT"
+                      }
+                    ]
+                  }
+                }
+              },
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "project_name",
+                    "queryName": "dashboards/01f14a31b7be13ef8888abcc3a3333d8/datasets/01f14a347c921d248ecfe3b20119fab8_project_name"
+                  },
+                  {
+                    "parameterName": "project_name",
+                    "queryName": "parameter_dashboards/01f14a31b7be13ef8888abcc3a3333d8/datasets/01f14a4663d21eae8f761f7295249974_project_name"
+                  },
+                  {
+                    "parameterName": "project_name",
+                    "queryName": "parameter_dashboards/01f14a31b7be13ef8888abcc3a3333d8/datasets/01f14a46dc5518fbbd5e349d7fb28ce8_project_name"
+                  },
+                  {
+                    "parameterName": "project_name",
+                    "queryName": "parameter_dashboards/01f14a31b7be13ef8888abcc3a3333d8/datasets/01f14a474ff31d05b62a55b248bf272d_project_name"
+                  },
+                  {
+                    "parameterName": "project_name",
+                    "queryName": "parameter_dashboards/01f14a31b7be13ef8888abcc3a3333d8/datasets/01f14a47bc881e258804ec7276203b9f_project_name"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 5,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "month-end-date",
+            "queries": [
+              {
+                "name": "dashboards/01f14a31b7be13ef8888abcc3a3333d8/datasets/01f14a347c921d248ecfe3b20119fab8_month_end_date",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "month_end_date",
+                      "expression": "`month_end_date`"
+                    },
+                    {
+                      "name": "month_end_date_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Month Ending"
+              },
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "month_end_date",
+                    "queryName": "dashboards/01f14a31b7be13ef8888abcc3a3333d8/datasets/01f14a347c921d248ecfe3b20119fab8_month_end_date"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 5,
+            "y": 1,
+            "width": 5,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "table_info_card",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "wip_report",
+                  "fields": [
+                    {
+                      "name": "ineight_project_id",
+                      "expression": "`ineight_project_id`"
+                    },
+                    {
+                      "name": "jde_job_number",
+                      "expression": "`jde_job_number`"
+                    },
+                    {
+                      "name": "division",
+                      "expression": "`division`"
+                    },
+                    {
+                      "name": "project_manager",
+                      "expression": "`project_manager`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Project Identification"
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "ineight_project_id",
+                    "contentAlignment": "left",
+                    "displayName": "InEight Project ID"
+                  },
+                  {
+                    "fieldName": "jde_job_number",
+                    "displayName": "JDE Job Number"
+                  },
+                  {
+                    "fieldName": "division",
+                    "displayName": "Division"
+                  },
+                  {
+                    "fieldName": "project_manager",
+                    "displayName": "Project Manager"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 5,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "2a616487",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# <span style=\"text-align:center;display:block\">**Monthly Managers Report**</span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 10,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "table_contract_summary",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "contract_summary",
+                  "fields": [
+                    {
+                      "name": "field_label",
+                      "expression": "`field_label`"
+                    },
+                    {
+                      "name": "field_value",
+                      "expression": "`field_value`"
+                    },
+                    {
+                      "name": "field_pct",
+                      "expression": "`field_pct`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Contract Summary"
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "field_label",
+                    "displayName": " "
+                  },
+                  {
+                    "fieldName": "field_value",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "none",
+                      "decimalPlaces": {
+                        "type": "exact",
+                        "places": 2
+                      }
+                    },
+                    "displayName": "Amount (CAD)"
+                  },
+                  {
+                    "fieldName": "field_pct",
+                    "contentAlignment": "right",
+                    "displayName": "%"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 5,
+            "height": 8
+          }
+        },
+        {
+          "widget": {
+            "name": "table_pending_changes",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "pending_changes",
+                  "fields": [
+                    {
+                      "name": "field_label",
+                      "expression": "`field_label`"
+                    },
+                    {
+                      "name": "field_value",
+                      "expression": "`field_value`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Pending Changes (Non-Contributing)"
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "field_label",
+                    "displayName": " "
+                  },
+                  {
+                    "fieldName": "field_value",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "none",
+                      "decimalPlaces": {
+                        "type": "exact",
+                        "places": 2
+                      }
+                    },
+                    "displayName": "Amount (CAD)"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 13,
+            "width": 5,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "table_cash_position",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "cash_position",
+                  "fields": [
+                    {
+                      "name": "field_label",
+                      "expression": "`field_label`"
+                    },
+                    {
+                      "name": "field_value",
+                      "expression": "`field_value`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Cash Position"
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "field_label",
+                    "displayName": " "
+                  },
+                  {
+                    "fieldName": "field_value",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "none",
+                      "decimalPlaces": {
+                        "type": "exact",
+                        "places": 2
+                      }
+                    },
+                    "displayName": "Amount (CAD)"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 5,
+            "y": 5,
+            "width": 5,
+            "height": 8
+          }
+        },
+        {
+          "widget": {
+            "name": "table_outstanding_ar",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "outstanding_ar",
+                  "fields": [
+                    {
+                      "name": "field_label",
+                      "expression": "`field_label`"
+                    },
+                    {
+                      "name": "field_value",
+                      "expression": "`field_value`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Outstanding A/R"
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "field_label",
+                    "displayName": " "
+                  },
+                  {
+                    "fieldName": "field_value",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "CAD",
+                      "abbreviation": "none",
+                      "decimalPlaces": {
+                        "type": "exact",
+                        "places": 2
+                      }
+                    },
+                    "displayName": "Amount (CAD)"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 5,
+            "y": 13,
+            "width": 5,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "edc0f26e",
+            "multilineTextboxSpec": {
+              "lines": [
+                "### Project Manager Comments"
+              ]
+            }
+          },
+          "position": {
+            "x": 5,
+            "y": 2,
+            "width": 5,
+            "height": 3
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}

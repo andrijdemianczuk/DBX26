@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .title { font-size: 22px; font-weight: 700; fill: #1B3139; }
+    .label { font-size: 13px; fill: #1B3139; }
+    .label-white { font-size: 13px; fill: #FFFFFF; font-weight: 600; }
+    .caption { font-size: 12px; fill: #425563; font-style: italic; }
+    .shift-lbl { font-size: 14px; font-weight: 700; fill: #FF3621; letter-spacing: 1.5px; }
+    .box { fill: #F9F7F4; stroke: #1B3139; stroke-width: 1.5; }
+    .box-dark { fill: #1B3139; stroke: #1B3139; stroke-width: 1.5; }
+    .box-brick { fill: #FF3621; stroke: #FF3621; stroke-width: 1.5; }
+    .arrow { stroke: #425563; stroke-width: 1.5; fill: none; }
+    .arrow-big { stroke: #FF3621; stroke-width: 3; fill: none; }
+  </style>
+  <defs>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <polygon points="0 0, 8 4, 0 8" fill="#425563"/>
+    </marker>
+    <marker id="ah-big" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <polygon points="0 0, 10 5, 0 10" fill="#FF3621"/>
+    </marker>
+  </defs>
+
+  <text x="150" y="40" class="title" text-anchor="middle">RBAC</text>
+
+  <rect class="box" x="90" y="65" width="120" height="40" rx="6"/>
+  <text x="150" y="90" class="label" text-anchor="middle">User</text>
+  <line class="arrow" x1="150" y1="105" x2="150" y2="135" marker-end="url(#ah)"/>
+
+  <rect class="box-dark" x="90" y="140" width="120" height="40" rx="6"/>
+  <text x="150" y="165" class="label-white" text-anchor="middle">Role</text>
+  <line class="arrow" x1="150" y1="180" x2="150" y2="210" marker-end="url(#ah)"/>
+
+  <rect class="box" x="90" y="215" width="120" height="40" rx="6"/>
+  <text x="150" y="240" class="label" text-anchor="middle">Permission</text>
+  <line class="arrow" x1="150" y1="255" x2="150" y2="285" marker-end="url(#ah)"/>
+
+  <rect class="box" x="90" y="290" width="120" height="40" rx="6"/>
+  <text x="150" y="315" class="label" text-anchor="middle">Resource</text>
+
+  <text x="150" y="365" class="caption" text-anchor="middle">Static — chain fixed</text>
+  <text x="150" y="382" class="caption" text-anchor="middle">at assignment time.</text>
+
+  <line class="arrow-big" x1="240" y1="200" x2="430" y2="200" marker-end="url(#ah-big)"/>
+  <text x="335" y="190" class="shift-lbl" text-anchor="middle">SHIFT</text>
+
+  <text x="665" y="40" class="title" text-anchor="middle">ABAC</text>
+
+  <rect class="box" x="470" y="72" width="130" height="36" rx="6"/>
+  <text x="535" y="95" class="label" text-anchor="middle">Subject attrs</text>
+
+  <rect class="box" x="470" y="122" width="130" height="36" rx="6"/>
+  <text x="535" y="145" class="label" text-anchor="middle">Resource attrs</text>
+
+  <rect class="box" x="470" y="172" width="130" height="36" rx="6"/>
+  <text x="535" y="195" class="label" text-anchor="middle">Action</text>
+
+  <rect class="box" x="470" y="222" width="130" height="36" rx="6"/>
+  <text x="535" y="245" class="label" text-anchor="middle">Environment</text>
+
+  <path class="arrow" d="M 600 90 C 625 90, 630 175, 645 178" marker-end="url(#ah)"/>
+  <path class="arrow" d="M 600 140 C 615 140, 630 175, 645 178" marker-end="url(#ah)"/>
+  <path class="arrow" d="M 600 190 C 615 190, 630 182, 645 182" marker-end="url(#ah)"/>
+  <path class="arrow" d="M 600 240 C 625 240, 630 185, 645 182" marker-end="url(#ah)"/>
+
+  <rect class="box-brick" x="650" y="145" width="120" height="70" rx="6"/>
+  <text x="710" y="175" class="label-white" text-anchor="middle">Policy</text>
+  <text x="710" y="195" class="label-white" text-anchor="middle">Engine</text>
+
+  <line class="arrow" x1="770" y1="180" x2="810" y2="180" marker-end="url(#ah)"/>
+
+  <rect class="box-dark" x="815" y="155" width="70" height="50" rx="6"/>
+  <text x="850" y="175" class="label-white" text-anchor="middle">Allow</text>
+  <text x="850" y="195" class="label-white" text-anchor="middle">/ Mask</text>
+
+  <text x="665" y="365" class="caption" text-anchor="middle">Dynamic — decision</text>
+  <text x="665" y="382" class="caption" text-anchor="middle">computed at query time.</text>
+</svg>
