@@ -1,10 +1,16 @@
 -- ============================================================================
 -- RESET governance to the "before" state (run between rehearsals).
--- Drops the two policies; tables, tags, and functions remain in place so the
--- demo is instantly re-armable via demo_apply_policy.sql.
+-- Drops the table-level row filters + column mask; tables, tags, and the
+-- filter/mask functions remain in place so the demo is instantly re-armable via
+-- demo_apply_policy.sql.
+--
+-- (DROP ROW FILTER / DROP MASK on a table that has none errors harmlessly —
+--  safe to ignore when re-running.)
 -- ============================================================================
 
--- (DROP POLICY does not support IF EXISTS; if a policy is already gone this line
---  errors harmlessly — safe to ignore when re-running.)
-DROP POLICY grid_client_scope ON SCHEMA ademianczuk_uc_1_catalog.stantec_grid_ops;
-DROP POLICY grid_pii_mask     ON SCHEMA ademianczuk_uc_1_catalog.stantec_grid_ops;
+ALTER TABLE ademianczuk_uc_1_catalog.stantec_grid_ops.corridors   DROP ROW FILTER;
+ALTER TABLE ademianczuk_uc_1_catalog.stantec_grid_ops.detections  DROP ROW FILTER;
+ALTER TABLE ademianczuk_uc_1_catalog.stantec_grid_ops.work_orders DROP ROW FILTER;
+ALTER TABLE ademianczuk_uc_1_catalog.stantec_grid_ops.inspections DROP ROW FILTER;
+
+ALTER TABLE ademianczuk_uc_1_catalog.stantec_grid_ops.detections ALTER COLUMN landowner_contact DROP MASK;
