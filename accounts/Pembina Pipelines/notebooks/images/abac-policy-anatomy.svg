@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 290" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .title { font-size: 20px; font-weight: 700; fill: #1B3139; }
+    .static-text { font-size: 17px; font-family: 'Courier New', Courier, monospace; fill: #1B3139; font-weight: 600; }
+    .pill-text { font-size: 15px; font-family: 'Courier New', Courier, monospace; fill: #FFFFFF; font-weight: 700; }
+    .legend { font-size: 12px; fill: #425563; font-style: italic; }
+    .callout-line { stroke: #425563; stroke-width: 1; fill: none; stroke-dasharray: 2 2; }
+    .callout-label { font-size: 13px; fill: #1B3139; font-weight: 700; }
+    .callout-sub { font-size: 11px; fill: #425563; }
+  </style>
+
+  <text x="450" y="32" class="title" text-anchor="middle">Anatomy of an ABAC policy</text>
+
+  <text x="40" y="98" class="legend">template</text>
+
+  <rect x="120" y="80" width="80" height="30" rx="15" fill="#2EB67D"/>
+  <text x="160" y="100" class="pill-text" text-anchor="middle">ALLOW</text>
+
+  <rect x="210" y="80" width="100" height="30" rx="15" fill="#1B3139"/>
+  <text x="260" y="100" class="pill-text" text-anchor="middle">[action]</text>
+
+  <text x="320" y="100" class="static-text">on</text>
+
+  <rect x="360" y="80" width="180" height="30" rx="15" fill="#FF3621"/>
+  <text x="450" y="100" class="pill-text" text-anchor="middle">[resource]</text>
+
+  <text x="550" y="100" class="static-text">when</text>
+
+  <rect x="615" y="80" width="260" height="30" rx="15" fill="#00A1C9"/>
+  <text x="745" y="100" class="pill-text" text-anchor="middle">[condition over attributes]</text>
+
+  <text x="40" y="168" class="legend">example</text>
+
+  <rect x="120" y="150" width="80" height="30" rx="15" fill="#2EB67D"/>
+  <text x="160" y="170" class="pill-text" text-anchor="middle">ALLOW</text>
+
+  <rect x="210" y="150" width="100" height="30" rx="15" fill="#1B3139"/>
+  <text x="260" y="170" class="pill-text" text-anchor="middle">SELECT</text>
+
+  <text x="320" y="170" class="static-text">on</text>
+
+  <rect x="360" y="150" width="180" height="30" rx="15" fill="#FF3621"/>
+  <text x="450" y="170" class="pill-text" text-anchor="middle">sales.transactions</text>
+
+  <text x="550" y="170" class="static-text">when</text>
+
+  <rect x="615" y="150" width="260" height="30" rx="15" fill="#00A1C9"/>
+  <text x="745" y="170" class="pill-text" text-anchor="middle">user.banner = row.banner</text>
+
+  <line class="callout-line" x1="160" y1="185" x2="160" y2="210"/>
+  <text x="160" y="226" class="callout-label" text-anchor="middle">Effect</text>
+  <text x="160" y="244" class="callout-sub" text-anchor="middle">Allow / Deny</text>
+  <text x="160" y="258" class="callout-sub" text-anchor="middle">/ Mask</text>
+
+  <line class="callout-line" x1="260" y1="185" x2="260" y2="210"/>
+  <text x="260" y="226" class="callout-label" text-anchor="middle">Action</text>
+  <text x="260" y="244" class="callout-sub" text-anchor="middle">What's being</text>
+  <text x="260" y="258" class="callout-sub" text-anchor="middle">attempted</text>
+
+  <line class="callout-line" x1="450" y1="185" x2="450" y2="210"/>
+  <text x="450" y="226" class="callout-label" text-anchor="middle">Resource</text>
+  <text x="450" y="244" class="callout-sub" text-anchor="middle">Object identity</text>
+  <text x="450" y="258" class="callout-sub" text-anchor="middle">or tag match</text>
+
+  <line class="callout-line" x1="745" y1="185" x2="745" y2="210"/>
+  <text x="745" y="226" class="callout-label" text-anchor="middle">Condition</text>
+  <text x="745" y="244" class="callout-sub" text-anchor="middle">Predicate over subject,</text>
+  <text x="745" y="258" class="callout-sub" text-anchor="middle">resource, env attributes</text>
+</svg>

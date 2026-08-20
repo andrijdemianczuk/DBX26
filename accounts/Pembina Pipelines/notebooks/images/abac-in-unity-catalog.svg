@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 500" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .title { font-size: 24px; font-weight: 700; fill: #1B3139; }
+    .attr-title-green { font-size: 16px; font-weight: 700; fill: #2EB67D; letter-spacing: 1.2px; }
+    .attr-title-brick { font-size: 16px; font-weight: 700; fill: #FF3621; letter-spacing: 1.2px; }
+    .attr-title-navy  { font-size: 16px; font-weight: 700; fill: #1B3139; letter-spacing: 1.2px; }
+    .attr-title-cyan  { font-size: 16px; font-weight: 700; fill: #00A1C9; letter-spacing: 1.2px; }
+    .attr-sub { font-size: 12px; fill: #425563; }
+    .pipe-label { font-size: 16px; fill: #1B3139; font-weight: 600; }
+    .pipe-label-white { font-size: 16px; fill: #FFFFFF; font-weight: 700; }
+    .pipe-sub-white { font-size: 12px; fill: #FFFFFF; opacity: 0.85; }
+    .pipe-caption { font-size: 11px; fill: #425563; font-style: italic; letter-spacing: 1.5px; }
+    .box-soft { fill: #F9F7F4; stroke: #1B3139; stroke-width: 1.5; }
+    .box-dark { fill: #1B3139; stroke: #1B3139; stroke-width: 1.5; }
+    .arrow { stroke: #425563; stroke-width: 1.5; fill: none; }
+    .arrow-thin { stroke: #425563; stroke-width: 1; fill: none; stroke-dasharray: 4 3; }
+  </style>
+  <defs>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <polygon points="0 0, 8 4, 0 8" fill="#425563"/>
+    </marker>
+  </defs>
+
+  <text x="490" y="38" class="title" text-anchor="middle">Where ABAC lives in Databricks Unity Catalog</text>
+
+  <rect class="box-soft" x="35" y="80" width="270" height="80" rx="6"/>
+  <text x="170" y="112" class="attr-title-green" text-anchor="middle">SUBJECT</text>
+  <text x="170" y="132" class="attr-sub" text-anchor="middle">User identity + group memberships</text>
+  <text x="170" y="148" class="attr-sub" text-anchor="middle">(synced from IdP)</text>
+
+  <rect class="box-soft" x="320" y="80" width="640" height="80" rx="6"/>
+  <text x="640" y="112" class="attr-title-brick" text-anchor="middle">RESOURCE</text>
+  <text x="640" y="138" class="attr-sub" text-anchor="middle">Tags on catalog / schema / table / column</text>
+
+  <text x="490" y="217" class="pipe-caption" text-anchor="middle">POLICY EVALUATION — PER QUERY</text>
+
+  <rect class="box-soft" x="50" y="235" width="240" height="80" rx="6"/>
+  <text x="170" y="280" class="pipe-label" text-anchor="middle">UC Grants Check</text>
+
+  <line class="arrow" x1="290" y1="275" x2="318" y2="275" marker-end="url(#ah)"/>
+
+  <rect class="box-dark" x="320" y="235" width="280" height="80" rx="6"/>
+  <text x="460" y="270" class="pipe-label-white" text-anchor="middle">Row Filter</text>
+  <text x="460" y="294" class="pipe-sub-white" text-anchor="middle">SQL UDF</text>
+
+  <line class="arrow" x1="600" y1="275" x2="628" y2="275" marker-end="url(#ah)"/>
+
+  <rect class="box-dark" x="630" y="235" width="280" height="80" rx="6"/>
+  <text x="770" y="270" class="pipe-label-white" text-anchor="middle">Column Mask</text>
+  <text x="770" y="294" class="pipe-sub-white" text-anchor="middle">SQL UDF</text>
+
+  <rect class="box-soft" x="35" y="395" width="270" height="80" rx="6"/>
+  <text x="170" y="424" class="attr-title-navy" text-anchor="middle">ACTION</text>
+  <text x="170" y="446" class="attr-sub" text-anchor="middle">SELECT, MODIFY, EXPORT</text>
+  <text x="170" y="462" class="attr-sub" text-anchor="middle">(built into the grant model)</text>
+
+  <rect class="box-soft" x="320" y="395" width="640" height="80" rx="6"/>
+  <text x="640" y="424" class="attr-title-cyan" text-anchor="middle">ENVIRONMENT</text>
+  <text x="640" y="450" class="attr-sub" text-anchor="middle">Cluster access mode, workspace, network</text>
+
+  <line class="arrow-thin" x1="170" y1="161" x2="170" y2="233" marker-end="url(#ah)"/>
+  <line class="arrow-thin" x1="170" y1="394" x2="170" y2="317" marker-end="url(#ah)"/>
+
+  <line class="arrow-thin" x1="460" y1="161" x2="460" y2="233" marker-end="url(#ah)"/>
+  <line class="arrow-thin" x1="770" y1="161" x2="770" y2="233" marker-end="url(#ah)"/>
+
+  <line class="arrow-thin" x1="460" y1="394" x2="460" y2="317" marker-end="url(#ah)"/>
+  <line class="arrow-thin" x1="770" y1="394" x2="770" y2="317" marker-end="url(#ah)"/>
+</svg>
