@@ -1,0 +1,326 @@
+<title>Grid Corridor Playbook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg: #eef1f4;
+    --surface: #ffffff;
+    --surface-2: #f4f6f8;
+    --ink: #131a21;
+    --ink-2: #47555f;
+    --ink-3: #7a8791;
+    --line: #dde3e8;
+    --teal: #0e5a5b;
+    --teal-soft: #e2efee;
+    --amber: #b46f11;
+    --amber-soft: #f7ecd8;
+    --clay: #a8412c;
+    --clay-soft: #f4e2dc;
+    --radius: 14px;
+    --maxw: 940px;
+    --mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0c1116; --surface: #141c23; --surface-2: #1a242c;
+      --ink: #eef3f6; --ink-2: #a9b7c0; --ink-3: #71818c; --line: #263038;
+      --teal: #5bc6c3; --teal-soft: #123030; --amber: #e0a344; --amber-soft: #2e2413;
+      --clay: #e0846a; --clay-soft: #331c15;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c1116; --surface: #141c23; --surface-2: #1a242c;
+    --ink: #eef3f6; --ink-2: #a9b7c0; --ink-3: #71818c; --line: #263038;
+    --teal: #5bc6c3; --teal-soft: #123030; --amber: #e0a344; --amber-soft: #2e2413;
+    --clay: #e0846a; --clay-soft: #331c15;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--sans); line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 40px 22px 72px; }
+
+  /* ---- header ---- */
+  header { margin-bottom: 34px; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--teal); font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(30px, 5vw, 46px); line-height: 1.02; margin: 10px 0 0;
+    letter-spacing: -.02em; text-wrap: balance; font-weight: 800;
+  }
+  .thesis {
+    margin: 16px 0 0; font-size: 17px; color: var(--ink-2); max-width: 62ch;
+  }
+  .thesis b { color: var(--ink); font-weight: 650; }
+
+  .coords {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px;
+  }
+  .coords a, .coords span {
+    font-family: var(--mono); font-size: 12px; text-decoration: none;
+    color: var(--ink-2); background: var(--surface); border: 1px solid var(--line);
+    padding: 5px 10px; border-radius: 999px;
+  }
+  .coords a:hover { color: var(--teal); border-color: var(--teal); }
+  .coords b { color: var(--ink); }
+
+  /* ---- non-negotiable banner ---- */
+  .nonneg {
+    display: flex; gap: 14px; align-items: flex-start; margin: 28px 0 8px;
+    background: var(--amber-soft); border: 1px solid var(--amber);
+    border-radius: var(--radius); padding: 14px 16px;
+  }
+  .nonneg .k { font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--amber); font-weight: 700; white-space: nowrap; padding-top: 2px; }
+  .nonneg p { margin: 0; font-size: 14px; color: var(--ink); }
+  .nonneg b { color: var(--ink); }
+
+  /* ---- timeline ---- */
+  .spine { position: relative; margin-top: 26px; }
+  .seg {
+    position: relative; display: grid; grid-template-columns: 92px 1fr; gap: 20px;
+    padding-bottom: 26px;
+  }
+  .seg::before {
+    content: ""; position: absolute; left: 45px; top: 8px; bottom: -8px;
+    width: 2px; background: var(--line);
+  }
+  .seg:last-child::before { display: none; }
+
+  .tcol { text-align: right; position: relative; }
+  .tmark {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 20px; font-weight: 700; color: var(--ink); letter-spacing: -.01em;
+  }
+  .tdur { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-top: 2px; }
+  .dot {
+    position: absolute; right: -47px; top: 6px; width: 12px; height: 12px;
+    border-radius: 50%; background: var(--teal); border: 3px solid var(--bg); z-index: 2;
+  }
+  .seg.flip .dot, .seg.line .dot { background: var(--amber); }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 18px 20px;
+  }
+  .card h2 {
+    margin: 0; font-size: 19px; letter-spacing: -.01em; font-weight: 750;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .pillar {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--teal); background: var(--teal-soft);
+    padding: 3px 8px; border-radius: 6px; font-weight: 600;
+  }
+  .badge {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--amber); border: 1px solid var(--amber);
+    padding: 2px 7px; border-radius: 6px; font-weight: 700;
+  }
+  ol.moves { margin: 14px 0 0; padding: 0; list-style: none; counter-reset: m; }
+  ol.moves li {
+    counter-increment: m; position: relative; padding: 4px 0 4px 30px; font-size: 14.5px;
+    color: var(--ink-2);
+  }
+  ol.moves li::before {
+    content: counter(m); position: absolute; left: 0; top: 4px;
+    font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--teal);
+    background: var(--teal-soft); width: 20px; height: 20px; border-radius: 6px;
+    display: grid; place-items: center;
+  }
+  ol.moves li b { color: var(--ink); font-weight: 650; }
+  code {
+    font-family: var(--mono); font-size: .87em; background: var(--surface-2);
+    border: 1px solid var(--line); padding: 1px 6px; border-radius: 6px; color: var(--ink);
+    white-space: nowrap;
+  }
+  .say {
+    margin: 14px 0 0; padding: 10px 14px; border-left: 3px solid var(--teal);
+    background: var(--surface-2); border-radius: 0 8px 8px 0; font-size: 14px;
+    color: var(--ink); font-style: italic;
+  }
+  .say::before { content: "SAY  "; font-style: normal; font-family: var(--mono);
+    font-size: 10px; letter-spacing: .14em; color: var(--ink-3); }
+
+  .beforeafter { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .ba { border-radius: 10px; padding: 10px 12px; font-size: 13px; }
+  .ba.b { background: var(--clay-soft); border: 1px solid var(--clay); }
+  .ba.a { background: var(--teal-soft); border: 1px solid var(--teal); }
+  .ba .lab { font-family: var(--mono); font-size: 10px; letter-spacing: .12em;
+    text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 3px; }
+  .ba.b .lab { color: var(--clay); }
+  .ba.a .lab { color: var(--teal); }
+
+  /* ---- safety net ---- */
+  .net {
+    margin-top: 10px; background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 20px 22px;
+  }
+  .net h2 { margin: 0 0 12px; font-size: 16px; letter-spacing: .02em; }
+  .net-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+  .net-item { font-size: 13.5px; color: var(--ink-2); }
+  .net-item .t { display: block; font-family: var(--mono); font-size: 11px;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 5px; }
+  .net-item b { color: var(--ink); }
+  pre {
+    margin: 6px 0 0; background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 8px; padding: 9px 11px; overflow-x: auto;
+  }
+  pre code { border: 0; background: none; padding: 0; white-space: pre; }
+
+  footer { margin-top: 30px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-3);
+    text-align: center; letter-spacing: .04em; }
+
+  @media (max-width: 560px) {
+    .seg { grid-template-columns: 64px 1fr; gap: 12px; }
+    .seg::before, .dot { display: none; }
+    .tcol { text-align: left; }
+    .beforeafter { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Live Demo Playbook · 15 min · CDO audience</div>
+    <h1>Grid Corridor Intelligence</h1>
+    <p class="thesis">Governed, ship-able AI. Run a query with full visibility →
+      apply <b>one policy on screen</b> → rerun and watch rows filter and PII mask →
+      then Genie and the agent inherit it with <b>zero changes</b>. One identity throughout;
+      the drama is the before/after flip.</p>
+    <div class="coords">
+      <span>warehouse <b>Serverless Starter</b></span>
+      <span>schema <b>stantec_grid_ops</b></span>
+      <span>propagation <b>~1.1s</b></span>
+      <a href="https://fevm-ademianczuk-uc-1.cloud.databricks.com/genie/rooms/01f19b488b6e1d4ea44cb81e09ec4a0e">↗ Genie space</a>
+      <a href="https://fevm-ademianczuk-uc-1.cloud.databricks.com/ml/experiments/2874905133974692">↗ MLflow traces</a>
+    </div>
+  </header>
+
+  <div class="nonneg">
+    <span class="k">Don't<br>cut</span>
+    <p>Two moments carry the story: the <b>live policy flip</b> (SQL + Genie, before → after)
+      and the <b>lineage walk-back</b> from a Genie answer to the source tables.
+      Everything else is negotiable if the clock runs.</p>
+  </div>
+
+  <div class="spine">
+
+    <!-- SEGMENT 1 -->
+    <section class="seg">
+      <div class="tcol"><div class="dot"></div><div class="tmark">0:00</div><div class="tdur">2 min</div></div>
+      <div class="card">
+        <h2>Discover <span class="pillar">Access &amp; discoverability</span></h2>
+        <ol class="moves">
+          <li>Catalog Explorer → <code>ademianczuk_uc_1_catalog.stantec_grid_ops</code>.</li>
+          <li>Show the four tables and their <b>AI-readable descriptions</b>.</li>
+          <li>Point out the <code>grid_client</code> / <code>grid_pii</code> <b>governed tags</b> on columns and the PK/FK relationships.</li>
+        </ol>
+        <p class="say">Curated, certified, discoverable — and already classified for governance.</p>
+      </div>
+    </section>
+
+    <!-- SEGMENT 2 -->
+    <section class="seg flip">
+      <div class="tcol"><div class="dot"></div><div class="tmark">2:00</div><div class="tdur">4 min</div></div>
+      <div class="card">
+        <h2>The Governance Flip <span class="pillar">Data &amp; AI governance</span> <span class="badge">Non-negotiable</span></h2>
+        <ol class="moves">
+          <li>SQL editor → run <code>demo_query.sql</code>. Full results: all 3 clients, phone numbers in the clear.</li>
+          <li>Run <code>demo_apply_policy.sql</code> on screen — <b>two short statements</b>, keyed off the tags.</li>
+          <li><b>Rerun the identical query.</b> Rows collapse to Utility A; contact shows <code>*** MASKED ***</code>.</li>
+          <li>Genie → re-ask question 1. Answer now scoped &amp; masked — <b>space and agent untouched</b>.</li>
+          <li><i>(optional 15s)</i> run <code>audit_closer.sql</code> — who queried what, when.</li>
+        </ol>
+        <div class="beforeafter">
+          <div class="ba b"><span class="lab">Before</span>3 clients · real landowner phones · Desert Mesa cluster</div>
+          <div class="ba a"><span class="lab">After (~1s)</span>Fictional Utility A only · contacts masked</div>
+        </div>
+        <p class="say">The data didn't move and the agent didn't change — the policy did. Governance as code, applied live.</p>
+      </div>
+    </section>
+
+    <!-- SEGMENT 3 -->
+    <section class="seg line">
+      <div class="tcol"><div class="dot"></div><div class="tmark">6:00</div><div class="tdur">3 min</div></div>
+      <div class="card">
+        <h2>Lineage &amp; Trace <span class="pillar">Governance · traceability</span> <span class="badge">Non-negotiable</span></h2>
+        <ol class="moves">
+          <li>From the Genie answer, open its <b>generated SQL</b>.</li>
+          <li>Catalog Explorer → <code>detections</code> → <b>Lineage</b> tab → walk back to <code>corridors</code> / <code>work_orders</code>.</li>
+          <li>Open the <b>MLflow experiment</b> → Traces → one trace: retriever spans (governed SQL) → LLM span (summary).</li>
+        </ol>
+        <p class="say">Every answer traces back to a governed table and forward through an auditable trace.</p>
+      </div>
+    </section>
+
+    <!-- SEGMENT 4 -->
+    <section class="seg">
+      <div class="tcol"><div class="dot"></div><div class="tmark">9:00</div><div class="tdur">3 min</div></div>
+      <div class="card">
+        <h2>Agent Briefing + Cost <span class="pillar">AI cost controls</span></h2>
+        <ol class="moves">
+          <li>Agent notebook → run <code>briefing("COR-007")</code>: detections by severity, recommended work orders (~<b>$659k CAD</b>), landowners <b>masked</b>, exec paragraph.</li>
+          <li><i>(optional)</i> <code>briefing("Fictional Utility C")</code> → <b>empty</b>: scoped out entirely.</li>
+          <li>Run <code>cost_attribution.sql</code> → this demo's spend under <code>project=corridor-demo</code>.</li>
+        </ol>
+        <p class="say">The same policy scopes the agent automatically — and every DBU is attributed to one project tag.</p>
+      </div>
+    </section>
+
+    <!-- SEGMENT 5 -->
+    <section class="seg">
+      <div class="tcol"><div class="dot"></div><div class="tmark">12:00</div><div class="tdur">2 min</div></div>
+      <div class="card">
+        <h2>Close <span class="pillar">Copilot / M365</span></h2>
+        <ol class="moves">
+          <li>Narrate the <b>Teams / M365 Copilot</b> surface for Genie over the integration slide <i>(connector not enabled here)</i>.</li>
+          <li>Recap the arc: governed data → permission-aware answers → traceable → cost-attributed.</li>
+        </ol>
+        <p class="say">This is what ship-able AI looks like: the governance travels with the data, everywhere it's used.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="net">
+    <h2>Safety net</h2>
+    <div class="net-grid">
+      <div class="net-item">
+        <span class="t">Reset between runs</span>
+        Back to the <b>before</b> state (PII visible, 3 clients):
+        <pre><code>python3 setup/dbsql.py -f sql/demo_remove_policy.sql</code></pre>
+      </div>
+      <div class="net-item">
+        <span class="t">Re-arm the flip</span>
+        <pre><code>python3 setup/dbsql.py -f sql/demo_apply_policy.sql</code></pre>
+        Takes effect on the next query (~1s).
+      </div>
+      <div class="net-item">
+        <span class="t">If the cost query is empty</span>
+        Billing lags a few hours — run it the <b>morning of</b> the demo, or use the
+        by-warehouse-id fallback (commented in the file).
+      </div>
+      <div class="net-item">
+        <span class="t">If Genie is slow</span>
+        Questions take ~10–20s. Pre-run question 1 in both states before the room fills.
+      </div>
+      <div class="net-item">
+        <span class="t">Full rebuild</span>
+        <pre><code>bash setup/build_all.sh</code></pre>
+        Idempotent; leaves the before state.
+      </div>
+      <div class="net-item">
+        <span class="t">Hero corridor</span>
+        <b>COR-007 · Desert Mesa Line</b> — Utility A, critical. Survives the filter, so
+        it anchors both before and after.
+      </div>
+    </div>
+  </div>
+
+  <footer>All data synthetic · Fictional Utility A/B/C · 555-01xx phone numbers</footer>
+</div>
