@@ -1,0 +1,25 @@
+# Databricks App config for the Corridor Intelligence chat front door.
+# Runs as its own service principal; the runtime injects DATABRICKS_HOST +
+# client-credentials, which server.js exchanges for an OAuth token to call the
+# serving endpoint. No tokens ever reach the browser.
+#
+# The frontend is pre-built locally into dist/ (synced with the source), and
+# express is the only runtime dependency. Databricks Apps' managed `npm install`
+# runs on the synced package.json; NODE_ENV=production keeps it to express only
+# (the full build tree in devDependencies OOM-crashed the managed install), and
+# the command just serves — no heavy build on the memory-limited app host.
+command: ['node', 'server.js']
+
+env:
+  - name: 'NODE_ENV'
+    value: 'production'
+  - name: 'SERVING_ENDPOINT'
+    value: 'agents_ademianczuk_uc_1_catalog-stantec_grid_ops-corridor_genie'
+
+# The serving endpoint the app is allowed to query. The resource key must match
+# the SERVING_ENDPOINT value above; grant CAN_QUERY to the app's service principal.
+resources:
+  - name: 'serving-endpoint'
+    serving_endpoint:
+      name: 'agents_ademianczuk_uc_1_catalog-stantec_grid_ops-corridor_genie'
+      permission: 'CAN_QUERY'

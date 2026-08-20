@@ -1,0 +1,11 @@
+{
+  "name": "corridor-intelligence-app",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Branded chat front door to the Corridor Genie serving endpoint (traced, governed).",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "comment": "ZERO runtime dependencies on purpose: the Databricks Apps build sandbox has no npm-registry egress, so any dependency hangs `npm install`. server.js uses only Node built-ins (http/fs; fetch is a Node 18+ global). The React frontend is pre-built locally into dist/ and shipped. To rebuild dist locally: `npm install --no-save vite @vitejs/plugin-react react react-dom react-markdown remark-gfm typescript @types/react @types/react-dom && npm run build`"
+}
